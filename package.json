@@ -1,12 +1,11 @@
 {
-  "name": "bch-wallet-starter",
-  "description": "A BCH web wallet starter for Gatsby.",
+  "name": "chat.fullstack.cash",
+  "description": "A prototype for uncensorable, e2e encrypted chat using Bitcoin and IPFS.",
   "version": "1.0.0",
   "license": "MIT",
   "author": "Chris Troutner <chris.troutner@gmail.com>",
   "contributors": [
-    "Daniel Gonzalez <danielhumgon@gmail.com>",
-    "Andre Cabrera <andrecabrera@protonmail.ch>"
+    "Daniel Gonzalez <danielhumgon@gmail.com>"
   ],
   "scripts": {
     "build": "gatsby build",
@@ -25,10 +24,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Permissionless-Software-Foundation/bch-wallet-starter"
+    "url": "https://github.com/Permissionless-Software-Foundation/chat.fullstack.cash"
   },
   "bugs": {
-    "url": "https://github.com/Permissionless-Software-Foundation/bch-wallet-starter/issues"
+    "url": "https://github.com/Permissionless-Software-Foundation/chat.fullstack.cash/issues"
   },
   "devDependencies": {
     "semantic-release": "^17.3.9",
