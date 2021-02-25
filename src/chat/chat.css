@@ -1,0 +1,14 @@
+.chat-view{
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 1em
+}
+.content-box{
+    background-color: var(--main-color);
+    color: white;
+    text-align: center;
+}
+.white-border{
+    border: 1px solid white;
+    cursor: pointer;
+}
