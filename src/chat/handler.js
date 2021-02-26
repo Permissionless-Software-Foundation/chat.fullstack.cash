@@ -1,9 +1,9 @@
 import React from 'react'
-import { Row, Col, Content, Box, Button } from 'adminlte-2-react'
-import { getWalletInfo } from 'gatsby-ipfs-web-wallet/src/components/localWallet'
+import { Row, Col } from 'adminlte-2-react'
+import PropTypes from 'prop-types'
 
 let _this
-class Nodes extends React.Component {
+class Handler extends React.Component {
   constructor (props) {
     super(props)
     _this = this
@@ -17,27 +17,27 @@ class Nodes extends React.Component {
     return (
       <div>
         <Row>
-          <Col xs={12} className="content-box mb-1">
+          <Col xs={12} className='content-box mb-1'>
             <h4>Online Nodes:{nodes.length}</h4>
           </Col>
           <Col
             xs={4}
-            onClick={() => _this.handleTerminal('ALL')}
-            className="content-box mb-1 white-border"
+            onClick={() => _this.handleTerminal('Chat')}
+            className='content-box mb-1 white-border'
           >
             <h4>ALL</h4>
           </Col>
           <Col
             xs={4}
-            onClick={() => _this.handleTerminal('Commands')}
-            className="content-box mb-1 white-border"
+            onClick={() => _this.handleTerminal('Command')}
+            className='content-box mb-1 white-border'
           >
             <h4>Command</h4>
           </Col>
           <Col
             xs={4}
             onClick={() => _this.handleTerminal('Status')}
-            className="content-box mb-1 white-border"
+            className='content-box mb-1 white-border'
           >
             <h4>Status</h4>
           </Col>
@@ -48,8 +48,11 @@ class Nodes extends React.Component {
 
   componentDidMount () {}
   handleTerminal (val) {
-    console.log(val)
+    _this.props.handleTerminal(val)
   }
 }
+Handler.propTypes = {
+  handleTerminal: PropTypes.func
+}
 
-export default Nodes
+export default Handler

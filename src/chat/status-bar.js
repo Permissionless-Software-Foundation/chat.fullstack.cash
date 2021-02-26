@@ -1,20 +1,26 @@
 import React from 'react'
-import { Row, Col, Content, Box, Button } from 'adminlte-2-react'
-import { getWalletInfo } from 'gatsby-ipfs-web-wallet/src/components/localWallet'
+import { Row, Col } from 'adminlte-2-react'
 
-let _this
 class StatusBar extends React.Component {
   constructor (props) {
     super(props)
-    _this = this
+
     this.state = {}
   }
 
   render () {
     return (
-      <div className="text-center">
-        <h2> Chat Status</h2>
-      </div>
+      <Row className='text-center'>
+        <Col xs={12} lg={4}>
+          <p>Node IPFS :</p>
+        </Col>
+        <Col xs={12} lg={4}>
+          <p>IPFS Connection :</p>
+        </Col>
+        <Col xs={12} lg={4}>
+          Chat Status :
+        </Col>
+      </Row>
     )
   }
 
