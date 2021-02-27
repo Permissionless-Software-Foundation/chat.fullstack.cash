@@ -11,7 +11,7 @@ import { Sidebar } from 'adminlte-2-react'
 
 // Example/Demo component. This is how you would build a component internal to
 // your wallet app/site.
-import DemoComponent from '../../demo-component'
+// import DemoComponent from '../../demo-component'
 
 // TX History Plugin.
 // This is an example of an external plugin for the wallet. It's a modular
@@ -24,6 +24,7 @@ import Wallet from 'gatsby-ipfs-web-wallet/src/components/admin-lte/wallet'
 import Tokens from 'gatsby-ipfs-web-wallet/src/components/admin-lte/tokens'
 import Configure from 'gatsby-ipfs-web-wallet/src/components/admin-lte/configure'
 import SendReceive from 'gatsby-ipfs-web-wallet/src/components/admin-lte/send-receive'
+import Chat from '../../chat'
 
 const { Item } = Sidebar
 
@@ -58,16 +59,13 @@ const MenuComponents = props => {
     {
       key: 'TX History',
       component: <TXHistory key='TX History' {...props} />,
-      menuItem: (
-        <Item icon='fas-cog' key='TX History' text='TX History' />
-      )
+      menuItem: <Item icon='fas-cog' key='TX History' text='TX History' />
     },
     {
-      key: 'Demo Component',
-      component: <DemoComponent key='Demo Component' {...props} />,
-      menuItem: (
-        <Item icon='fas-cog' key='Demo Component' text='Demo Component' />
-      )
+      active: true,
+      key: 'Chat',
+      component: <Chat key='Chat' {...props} />,
+      menuItem: <Item icon='fa-comments' key='Chat' text='Chat' />
     }
   ]
 }
