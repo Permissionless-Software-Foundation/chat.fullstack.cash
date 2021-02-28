@@ -49,9 +49,9 @@ class CommandRouter {
 
     switch (words[1]) {
       case 'relays':
-        return await this.listRelays(appIpfs)
+        return this.listRelays(appIpfs)
       case 'peers':
-        return await this.listPeers(appIpfs)
+        return this.listPeers(appIpfs)
       default:
         return ''
     }
@@ -62,7 +62,7 @@ class CommandRouter {
 
     switch (words[1]) {
       case 'list':
-        return await this.listPubsubChannels(appIpfs)
+        return this.listPubsubChannels(appIpfs)
       default:
         return ''
     }
