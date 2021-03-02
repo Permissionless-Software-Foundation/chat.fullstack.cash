@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Row, Col, Inputs } from 'adminlte-2-react'
 import CommandRouter from '../lib/commands'
 const { Text } = Inputs
@@ -38,14 +39,31 @@ class StatusTerminal extends React.Component {
     )
   }
 
-  componentDidMount () {}
+  componentDidMount () {
+    if (_this.state.output !== _this.props.log) {
+      _this.setState({
+        output: _this.props.log
+      })
+      _this.keepScrolled()
+    }
+  }
+
+  componentDidUpdate () {
+    if (_this.state.output !== _this.props.log) {
+      _this.setState({
+        output: _this.props.log
+      })
+      _this.keepScrolled()
+    }
+  }
 
   // Adds a line to the terminal
   handleLog (str) {
     try {
-      _this.setState({
+      /*       _this.setState({
         output: _this.state.output + '   ' + str + '\n'
-      })
+      }) */
+      _this.props.handleLog(str)
       _this.keepScrolled()
     } catch (error) {
       console.warn(error)
@@ -64,6 +82,10 @@ class StatusTerminal extends React.Component {
       console.warn(error)
     }
   }
+}
+StatusTerminal.propTypes = {
+  handleLog: PropTypes.func,
+  log: PropTypes.string
 }
 
 export default StatusTerminal

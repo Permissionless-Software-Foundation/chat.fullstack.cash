@@ -20,7 +20,9 @@ class Chat extends React.Component {
     _this = this
 
     this.state = {
-      displayTerminal: 'Chat'
+      displayTerminal: 'Chat',
+      statusOutput: '',
+      commandOutput: "Enter 'help' to see available commands."
     }
 
     // CT: Should I instantiate the components here? I want to pass the log
@@ -30,8 +32,8 @@ class Chat extends React.Component {
     this.commandTerminal = new CommandTerminal()
 
     const ipfsConfig = {
-      handleLog: _this.statusTerminal.handleLog,
-      handleChatLog: _this.commandTerminal.handleCommandLog
+      handleLog: _this.onStatusLog,
+      handleChatLog: _this.onCommandLog
     }
     this.ipfsControl = new IpfsControl(ipfsConfig)
   }
@@ -39,7 +41,7 @@ class Chat extends React.Component {
   render () {
     const { displayTerminal } = _this.state
     return (
-      <Row className="chat-view">
+      <Row className='chat-view'>
         <Col xs={12}>
           <StatusBar />
         </Col>
@@ -48,8 +50,18 @@ class Chat extends React.Component {
         </Col>
         <Col xs={12} lg={6}>
           {displayTerminal === 'Chat' && <ChatTerminal />}
-          {displayTerminal === 'Command' && <CommandTerminal />}
-          {displayTerminal === 'Status' && <StatusTerminal />}
+          {displayTerminal === 'Command' && (
+            <CommandTerminal
+              handleLog={_this.onCommandLog}
+              log={_this.state.commandOutput}
+            />
+          )}
+          {displayTerminal === 'Status' && (
+            <StatusTerminal
+              handleLog={_this.onStatusLog}
+              log={_this.state.statusOutput}
+            />
+          )}
         </Col>
       </Row>
     )
@@ -84,6 +96,34 @@ class Chat extends React.Component {
   handleIncomingChatMsg (msg) {
     try {
       console.log(`handleIncomingChatMsg(): ${msg}`)
+    } catch (error) {
+      console.warn(error)
+    }
+  }
+
+  // Adds a line to the ipfs status terminal
+  onStatusLog (str) {
+    try {
+      _this.setState({
+        statusOutput: _this.state.statusOutput + '   ' + str + '\n'
+      })
+    } catch (error) {
+      console.warn(error)
+    }
+  }
+
+  // Adds a line to the terminal
+  onCommandLog (msg) {
+    try {
+      let commandOutput
+      if (!msg) {
+        commandOutput = ''
+      } else {
+        commandOutput = _this.state.commandOutput + '   ' + msg + '\n'
+      }
+      _this.setState({
+        commandOutput
+      })
     } catch (error) {
       console.warn(error)
     }
