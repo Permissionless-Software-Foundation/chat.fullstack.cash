@@ -8,12 +8,13 @@ class Handler extends React.Component {
     super(props)
     _this = this
     this.state = {
-      nodes: []
+      nodes: [],
+      currentTerminal: 'Chat'
     }
   }
 
   render () {
-    const { nodes } = _this.state
+    const { nodes, currentTerminal } = _this.state
     return (
       <div>
         <Row>
@@ -23,21 +24,27 @@ class Handler extends React.Component {
           <Col
             xs={4}
             onClick={() => _this.handleTerminal('Chat')}
-            className='content-box mb-1 white-border'
+            className={`content-box mb-1 white-border ${
+              currentTerminal === 'Chat' ? 'clicked-btn' : ''
+            }`}
           >
             <h4>ALL</h4>
           </Col>
           <Col
             xs={4}
             onClick={() => _this.handleTerminal('Command')}
-            className='content-box mb-1 white-border'
+            className={`content-box mb-1 white-border ${
+              currentTerminal === 'Command' ? 'clicked-btn' : ''
+            }`}
           >
             <h4>Command</h4>
           </Col>
           <Col
             xs={4}
             onClick={() => _this.handleTerminal('Status')}
-            className='content-box mb-1 white-border'
+            className={`content-box mb-1 white-border ${
+              currentTerminal === 'Status' ? 'clicked-btn' : ''
+            }`}
           >
             <h4>Status</h4>
           </Col>
@@ -48,6 +55,9 @@ class Handler extends React.Component {
 
   componentDidMount () {}
   handleTerminal (val) {
+    _this.setState({
+      currentTerminal: val
+    })
     _this.props.handleTerminal(val)
   }
 }

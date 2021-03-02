@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Row, Col, Inputs } from 'adminlte-2-react'
 import CommandRouter from '../lib/commands'
 const { Text } = Inputs
@@ -51,7 +52,23 @@ class CommandTerminal extends React.Component {
     )
   }
 
-  componentDidMount () {}
+  componentDidMount () {
+    if (_this.state.commandOutput !== _this.props.log) {
+      _this.setState({
+        commandOutput: _this.props.log
+      })
+      _this.keepCommandScrolled()
+    }
+  }
+
+  componentDidUpdate () {
+    if (_this.state.commandOutput !== _this.props.log) {
+      _this.setState({
+        commandOutput: _this.props.log
+      })
+      _this.keepCommandScrolled()
+    }
+  }
 
   // Handles text typed into the input box.
   handleTextInput (event) {
@@ -84,9 +101,7 @@ class CommandTerminal extends React.Component {
 
       const outMsg = await _this.commandRouter.route(msg, _this.appIpfs)
       if (outMsg === 'clear') {
-        _this.setState({
-          commandOutput: ''
-        })
+        _this.props.handleLog('')
       } else {
         _this.handleCommandLog(`\n${outMsg}`)
       }
@@ -103,10 +118,7 @@ class CommandTerminal extends React.Component {
     try {
       // console.log("msg: ", msg);
 
-      _this.setState({
-        commandOutput: _this.state.commandOutput + '   ' + msg + '\n'
-      })
-
+      _this.props.handleLog(msg)
       // Add a slight delay, to give the browser time to render the DOM.
       await this.sleep(250)
 
@@ -122,10 +134,11 @@ class CommandTerminal extends React.Component {
     try {
       // Keeps scrolled to the bottom
       const textarea = document.getElementById('commandTerminal')
+
       if (textarea) {
         // window.textarea = textarea
 
-        textarea.scrollTop = textarea.scrollTopMax
+        textarea.scrollTop = textarea.scrollHeight
       }
     } catch (error) {
       console.warn(error)
@@ -137,5 +150,8 @@ class CommandTerminal extends React.Component {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 }
-
+CommandTerminal.propTypes = {
+  handleLog: PropTypes.func,
+  log: PropTypes.string
+}
 export default CommandTerminal
