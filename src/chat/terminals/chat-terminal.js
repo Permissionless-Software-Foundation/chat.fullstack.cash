@@ -11,7 +11,8 @@ class ChatTerminal extends React.Component {
     this.state = {
       chatOutput: '',
       chatWith: 'All',
-      chatInput: ''
+      chatInput: '',
+      nickname: 'Nickname'
     }
     this.commandRouter = new CommandRouter()
   }
@@ -32,15 +33,17 @@ class ChatTerminal extends React.Component {
               labelPosition='none'
               rows={20}
               value={`${chatOutput ? `${chatOutput}>` : '>'}`}
+              readOnly
             />
           </Col>
           <Col xs={3}>
             <Text
-              id='chatMessages'
-              name='chatMessages'
+              id='nickname'
+              name='nickname'
               inputType='text'
               labelPosition='none'
               placeholder='Nickname'
+              onChange={this.handleNickname}
             />
           </Col>
           <Col xs={9}>
@@ -183,6 +186,23 @@ class ChatTerminal extends React.Component {
       }
     } catch (error) {
       console.warn(error)
+    }
+  }
+
+  handleNickname = event => {
+    try {
+      event.preventDefault();
+
+      const target = event.target;
+      const value = target.value;
+      const name = target.name;
+      // console.log('value: ', value)
+
+      this.setState({
+        [name]: value
+      });
+    } catch(err) {
+      console.warn('Error in chat-terminal.js/handleNickname(): ', err)
     }
   }
 }
