@@ -3,11 +3,14 @@ import { Row, Col, Button, Inputs } from 'adminlte-2-react'
 import CommandRouter from '../lib/commands'
 const { Text } = Inputs
 
-let _this
+let _this // Instance of this class.
+
 class ChatTerminal extends React.Component {
   constructor (props) {
     super(props)
+
     _this = this
+
     this.state = {
       chatOutput: '',
       chatWith: 'All',
@@ -22,15 +25,15 @@ class ChatTerminal extends React.Component {
     return (
       <div>
         <Row>
-          <Col xs={12} className='text-center content-box '>
+          <Col xs={12} className="text-center content-box ">
             <h4>Chat With : {chatWith}</h4>
           </Col>
-          <Col xs={12} className='mt-1'>
+          <Col xs={12} className="mt-1">
             <Text
-              id='chatTerminal'
-              name='chatTerminal'
-              inputType='textarea'
-              labelPosition='none'
+              id="chatTerminal"
+              name="chatTerminal"
+              inputType="textarea"
+              labelPosition="none"
               rows={20}
               value={`${chatOutput ? `${chatOutput}>` : '>'}`}
               readOnly
@@ -38,28 +41,28 @@ class ChatTerminal extends React.Component {
           </Col>
           <Col xs={3}>
             <Text
-              id='nickname'
-              name='nickname'
-              inputType='text'
-              labelPosition='none'
-              placeholder='Nickname'
+              id="nickname"
+              name="nickname"
+              inputType="text"
+              labelPosition="none"
+              placeholder="Nickname"
               onChange={this.handleNickname}
             />
           </Col>
           <Col xs={9}>
             <Text
-              id='chatInput'
-              name='chatInput'
-              inputType='text'
-              labelPosition='none'
-              placeholder='type message'
+              id="chatInput"
+              name="chatInput"
+              inputType="text"
+              labelPosition="none"
+              placeholder="type message"
               value={chatInput}
               onChange={this.handleTextInput}
               onKeyDown={_this.handleChatKeyDown}
               buttonRight={
                 <Button
-                  type='primary'
-                  text='Send.'
+                  type="primary"
+                  text="Send."
                   onClick={_this.handleChatBtn}
                 />
               }
@@ -189,19 +192,19 @@ class ChatTerminal extends React.Component {
     }
   }
 
-  handleNickname = event => {
+  handleNickname (event) {
     try {
-      event.preventDefault();
+      event.preventDefault()
 
-      const target = event.target;
-      const value = target.value;
-      const name = target.name;
+      const target = event.target
+      const value = target.value
+      const name = target.name
       // console.log('value: ', value)
 
-      this.setState({
+      _this.setState({
         [name]: value
-      });
-    } catch(err) {
+      })
+    } catch (err) {
       console.warn('Error in chat-terminal.js/handleNickname(): ', err)
     }
   }
