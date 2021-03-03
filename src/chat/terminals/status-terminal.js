@@ -83,6 +83,7 @@ class StatusTerminal extends React.Component {
     }
   }
 }
+
 StatusTerminal.propTypes = {
   handleLog: PropTypes.func,
   log: PropTypes.string

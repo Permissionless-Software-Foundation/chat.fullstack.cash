@@ -100,6 +100,7 @@ class CommandTerminal extends React.Component {
       // _this.handleCommandLog(`me: ${msg}`);
 
       const outMsg = await _this.commandRouter.route(msg, _this.appIpfs)
+
       if (outMsg === 'clear') {
         _this.props.handleLog('')
       } else {
