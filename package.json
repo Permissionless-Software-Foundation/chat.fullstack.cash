@@ -33,6 +33,12 @@
     "url": "https://github.com/Permissionless-Software-Foundation/chat.fullstack.cash/issues"
   },
   "devDependencies": {
+    "eslint": "^7.21.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-standard": "^5.0.0",
     "semantic-release": "^17.3.9",
     "standard": "^16.0.3"
   },
