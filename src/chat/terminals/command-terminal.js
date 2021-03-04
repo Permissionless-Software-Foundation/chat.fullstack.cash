@@ -4,17 +4,24 @@ import { Row, Col, Inputs } from 'adminlte-2-react'
 import CommandRouter from '../lib/commands'
 const { Text } = Inputs
 
-let _this
+let _this // Handle to the instance of this class.
+
 class CommandTerminal extends React.Component {
   constructor (props) {
     super(props)
+
     _this = this
+
     this.state = {
       commandOutput: "Enter 'help' to see available commands.",
       commandInput: ''
     }
 
-    this.commandRouter = new CommandRouter()
+    if (props && props.ipfsControl) {
+      this.ipfsControl = props.ipfsControl
+      this.commandRouter = new CommandRouter({ ipfsControl: this.ipfsControl })
+      // console.log('this.commandRouter: ', this.commandRouter)
+    }
   }
 
   render () {
@@ -99,7 +106,9 @@ class CommandTerminal extends React.Component {
 
       // _this.handleCommandLog(`me: ${msg}`);
 
-      const outMsg = await _this.commandRouter.route(msg, _this.appIpfs)
+      console.log('_this: ', _this)
+      console.log('_this.commandRouter: ', _this.commandRouter)
+      const outMsg = await _this.commandRouter.route(msg, _this.ipfsControl)
 
       if (outMsg === 'clear') {
         _this.props.handleLog('')

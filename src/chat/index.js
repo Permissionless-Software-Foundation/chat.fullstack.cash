@@ -22,20 +22,23 @@ class Chat extends React.Component {
     this.state = {
       displayTerminal: 'Chat',
       statusOutput: '',
-      commandOutput: "Enter 'help' to see available commands."
+      commandOutput: "Enter 'help' to see available commands.",
+      chatOutput: '',
+      nickname: 'Nicknames'
     }
+
+    const ipfsConfig = {
+      handleLog: _this.onStatusLog,
+      // handleChatLog: _this.onCommandLog
+      handleChatLog: _this.onChatLog
+    }
+    this.ipfsControl = new IpfsControl(ipfsConfig)
 
     // CT: Should I instantiate the components here? I want to pass the log
     // handler to the IpfsControl library. Maybe we should make the handleLog()
     // function a static function for the component Class?
-    this.statusTerminal = new StatusTerminal()
-    this.commandTerminal = new CommandTerminal()
-
-    const ipfsConfig = {
-      handleLog: _this.onStatusLog,
-      handleChatLog: _this.onCommandLog
-    }
-    this.ipfsControl = new IpfsControl(ipfsConfig)
+    // this.statusTerminal = new StatusTerminal()
+    // this.commandTerminal = new CommandTerminal()
   }
 
   render () {
@@ -49,11 +52,19 @@ class Chat extends React.Component {
           <Handler handleTerminal={_this.onHandleTerminal} />
         </Col>
         <Col xs={12} lg={6}>
-          {displayTerminal === 'Chat' && <ChatTerminal />}
+          {displayTerminal === 'Chat' && (
+            <ChatTerminal
+              handleLog={_this.onChatLog}
+              log={_this.state.chatOutput}
+              nickname={_this.state.nickname}
+              ipfsControl={_this.ipfsControl}
+            />
+          )}
           {displayTerminal === 'Command' && (
             <CommandTerminal
               handleLog={_this.onCommandLog}
               log={_this.state.commandOutput}
+              ipfsControl={_this.ipfsControl}
             />
           )}
           {displayTerminal === 'Status' && (
@@ -101,7 +112,7 @@ class Chat extends React.Component {
     }
   }
 
-  // Adds a line to the ipfs status terminal
+  // Adds a line to the ipfs Status terminal
   onStatusLog (str) {
     try {
       _this.setState({
@@ -112,7 +123,19 @@ class Chat extends React.Component {
     }
   }
 
-  // Adds a line to the terminal
+  // Adds a line to the Chat terminal
+  onChatLog (str, nickname) {
+    try {
+      _this.setState({
+        chatOutput: _this.state.chatOutput + '   ' + str + '\n',
+        nickname
+      })
+    } catch (error) {
+      console.warn(error)
+    }
+  }
+
+  // Adds a line to the Command terminal
   onCommandLog (msg) {
     try {
       let commandOutput
