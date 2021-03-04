@@ -17,7 +17,10 @@ class ChatTerminal extends React.Component {
       chatInput: '',
       nickname: 'Nickname'
     }
-    this.commandRouter = new CommandRouter()
+
+    if (props && props.ipfsControl) {
+      this.ipfsControl = props.ipfsControl
+    }
   }
 
   render () {
@@ -25,15 +28,15 @@ class ChatTerminal extends React.Component {
     return (
       <div>
         <Row>
-          <Col xs={12} className='text-center content-box '>
+          <Col xs={12} className="text-center content-box ">
             <h4>Chat With : {chatWith}</h4>
           </Col>
-          <Col xs={12} className='mt-1'>
+          <Col xs={12} className="mt-1">
             <Text
-              id='chatTerminal'
-              name='chatTerminal'
-              inputType='textarea'
-              labelPosition='none'
+              id="chatTerminal"
+              name="chatTerminal"
+              inputType="textarea"
+              labelPosition="none"
               rows={20}
               value={`${chatOutput ? `${chatOutput}>` : '>'}`}
               readOnly
@@ -41,28 +44,29 @@ class ChatTerminal extends React.Component {
           </Col>
           <Col xs={3}>
             <Text
-              id='nickname'
-              name='nickname'
-              inputType='text'
-              labelPosition='none'
-              placeholder='Nickname'
+              id="nickname"
+              name="nickname"
+              inputType="text"
+              labelPosition="none"
+              placeholder="Nickname"
               onChange={this.handleNickname}
+              value={this.state.nickname}
             />
           </Col>
           <Col xs={9}>
             <Text
-              id='chatInput'
-              name='chatInput'
-              inputType='text'
-              labelPosition='none'
-              placeholder='type message'
+              id="chatInput"
+              name="chatInput"
+              inputType="text"
+              labelPosition="none"
+              placeholder="type message"
               value={chatInput}
               onChange={this.handleTextInput}
               onKeyDown={_this.handleChatKeyDown}
               buttonRight={
                 <Button
-                  type='primary'
-                  text='Send.'
+                  type="primary"
+                  text="Send."
                   onClick={_this.handleChatBtn}
                 />
               }
@@ -73,7 +77,16 @@ class ChatTerminal extends React.Component {
     )
   }
 
-  componentDidMount () {}
+  componentDidMount () {
+    // Restore the terminal log after rendering this component.
+    if (_this.state.chatOutput !== _this.props.log) {
+      _this.setState({
+        chatOutput: _this.props.log,
+        nickname: _this.props.nickname
+      })
+      _this.keepChatScrolled()
+    }
+  }
 
   // Handles text typed into the input box.
   handleTextInput (event) {
@@ -89,45 +102,18 @@ class ChatTerminal extends React.Component {
     })
   }
 
-  //
-  /* START command handling functions */
-  // Handles when the Enter key is pressed while in the chat input box.
-  async handleCommandKeyDown (e) {
-    if (e.key === 'Enter') {
-      // _this.submitMsg()
-      // console.log("Enter key");
-
-      // Send a chat message to the chat pubsub room.
-      // const now = new Date();
-      // const msg = `Message from BROWSER at ${now.toLocaleString()}`
-      const msg = _this.state.commandInput
-      // console.log(`Sending this message: ${msg}`);
-
-      // _this.handleCommandLog(`me: ${msg}`);
-
-      const outMsg = await _this.commandRouter.route(msg, _this.appIpfs)
-      if (outMsg === 'clear') {
-        _this.setState({
-          commandOutput: ''
-        })
-      } else {
-        _this.handleCommandLog(`\n${outMsg}`)
-      }
-
-      // Clear the input text box.
-      _this.setState({
-        commandInput: ''
-      })
-    }
-  }
-
   sleep (ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
   handleChatBtn () {
     const msg = _this.state.chatInput
+    const nickname = _this.state.nickname
+
     _this.handleChatLog(`me: ${msg}`)
+
+    _this.props.handleLog(msg, nickname)
+
     _this.setState({
       chatInput: ''
     })
@@ -145,7 +131,9 @@ class ChatTerminal extends React.Component {
       // const now = new Date();
       // const msg = `Message from BROWSER at ${now.toLocaleString()}`
       _this.handleChatBtn()
-      /*
+
+      const msg = _this.state.chatInput
+
       const CHAT_ROOM_NAME = 'psf-ipfs-chat-001'
 
       const chatObj = {
@@ -154,13 +142,14 @@ class ChatTerminal extends React.Component {
         handle: _this.state.handle
       }
 
-      const chatData = _this.appIpfs.ipfsCoord.ipfs.schema.chat(chatObj)
+      console.log(`Sending "${msg}" to ${CHAT_ROOM_NAME}`)
+
+      const chatData = _this.ipfsControl.ipfsCoord.ipfs.schema.chat(chatObj)
       const chatDataStr = JSON.stringify(chatData)
-      await _this.appIpfs.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(
+      await _this.ipfsControl.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(
         CHAT_ROOM_NAME,
         chatDataStr
       )
- */
     }
   }
 

@@ -4,17 +4,24 @@ import { Row, Col, Inputs } from 'adminlte-2-react'
 import CommandRouter from '../lib/commands'
 const { Text } = Inputs
 
-let _this
+let _this // Handle to the instance of this class.
+
 class CommandTerminal extends React.Component {
   constructor (props) {
     super(props)
+
     _this = this
+
     this.state = {
       commandOutput: "Enter 'help' to see available commands.",
       commandInput: ''
     }
 
-    this.commandRouter = new CommandRouter()
+    if (props && props.ipfsControl) {
+      this.ipfsControl = props.ipfsControl
+      this.commandRouter = new CommandRouter({ ipfsControl: this.ipfsControl })
+      // console.log('this.commandRouter: ', this.commandRouter)
+    }
   }
 
   render () {
@@ -22,15 +29,15 @@ class CommandTerminal extends React.Component {
     return (
       <div>
         <Row>
-          <Col xs={12} className='text-center content-box '>
+          <Col xs={12} className="text-center content-box ">
             <h4>Command Terminal</h4>
           </Col>
-          <Col xs={12} className='mt-1'>
+          <Col xs={12} className="mt-1">
             <Text
-              id='commandTerminal'
-              name='commandTerminal'
-              inputType='textarea'
-              labelPosition='none'
+              id="commandTerminal"
+              name="commandTerminal"
+              inputType="textarea"
+              labelPosition="none"
               rows={20}
               readOnly
               value={`${commandOutput ? `${commandOutput}>` : '>'}`}
@@ -38,10 +45,10 @@ class CommandTerminal extends React.Component {
           </Col>
           <Col xs={12}>
             <Text
-              id='commandInput'
-              name='commandInput'
-              inputType='tex'
-              labelPosition='none'
+              id="commandInput"
+              name="commandInput"
+              inputType="tex"
+              labelPosition="none"
               value={this.state.commandInput}
               onChange={this.handleTextInput}
               onKeyDown={_this.handleCommandKeyDown}
@@ -99,7 +106,9 @@ class CommandTerminal extends React.Component {
 
       // _this.handleCommandLog(`me: ${msg}`);
 
-      const outMsg = await _this.commandRouter.route(msg, _this.appIpfs)
+      console.log('_this: ', _this)
+      console.log('_this.commandRouter: ', _this.commandRouter)
+      const outMsg = await _this.commandRouter.route(msg, _this.ipfsControl)
 
       if (outMsg === 'clear') {
         _this.props.handleLog('')

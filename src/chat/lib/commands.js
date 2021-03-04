@@ -2,7 +2,17 @@
   Handles commands from command terminal.
 */
 
+let _this
+
 class CommandRouter {
+  constructor (cmdConfig) {
+    if (cmdConfig && cmdConfig.ipfsControl) {
+      this.ipfsControl = cmdConfig.ipfsControl
+    }
+
+    _this = this
+  }
+
   // Parse and route a command to the proper handler.
   async route (command, appIpfs) {
     try {
@@ -49,9 +59,9 @@ class CommandRouter {
 
     switch (words[1]) {
       case 'relays':
-        return this.listRelays(appIpfs)
+        return this.listRelays(_this.ipfsControl)
       case 'peers':
-        return this.listPeers(appIpfs)
+        return this.listPeers(_this.ipfsControl)
       default:
         return ''
     }
@@ -71,7 +81,7 @@ class CommandRouter {
   // List known ipfs-coord peers.
   async listPeers (appIpfs) {
     try {
-      console.log('appIpfs: ', appIpfs)
+      // console.log('appIpfs: ', appIpfs)
 
       const relays = `Known ipfs-coord peers:\n${JSON.stringify(
         appIpfs.ipfsCoord.ipfs.peers.state.peers,
@@ -82,8 +92,8 @@ class CommandRouter {
 
       // return "test"
     } catch (err) {
-      console.error('Error in listRelays(): ', err)
-      return 'Error in listRelays()'
+      console.error('Error in listPeers(): ', err)
+      return 'Error in listPeers()'
     }
   }
 
