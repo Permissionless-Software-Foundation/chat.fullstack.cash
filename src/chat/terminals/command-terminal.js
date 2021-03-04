@@ -29,15 +29,15 @@ class CommandTerminal extends React.Component {
     return (
       <div>
         <Row>
-          <Col xs={12} className="text-center content-box ">
+          <Col xs={12} className='text-center content-box '>
             <h4>Command Terminal</h4>
           </Col>
-          <Col xs={12} className="mt-1">
+          <Col xs={12} className='mt-1'>
             <Text
-              id="commandTerminal"
-              name="commandTerminal"
-              inputType="textarea"
-              labelPosition="none"
+              id='commandTerminal'
+              name='commandTerminal'
+              inputType='textarea'
+              labelPosition='none'
               rows={20}
               readOnly
               value={`${commandOutput ? `${commandOutput}>` : '>'}`}
@@ -45,10 +45,10 @@ class CommandTerminal extends React.Component {
           </Col>
           <Col xs={12}>
             <Text
-              id="commandInput"
-              name="commandInput"
-              inputType="tex"
-              labelPosition="none"
+              id='commandInput'
+              name='commandInput'
+              inputType='tex'
+              labelPosition='none'
               value={this.state.commandInput}
               onChange={this.handleTextInput}
               onKeyDown={_this.handleCommandKeyDown}

@@ -44,7 +44,7 @@ class Chat extends React.Component {
   render () {
     const { displayTerminal } = _this.state
     return (
-      <Row className="chat-view">
+      <Row className='chat-view'>
         <Col xs={12}>
           <StatusBar />
         </Col>
