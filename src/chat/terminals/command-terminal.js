@@ -41,6 +41,9 @@ class CommandTerminal extends React.Component {
               rows={20}
               readOnly
               value={`${commandOutput ? `${commandOutput}>` : '>'}`}
+              onChange={() => {
+                /** Prevents DOM error */
+              }}
             />
           </Col>
           <Col xs={12}>

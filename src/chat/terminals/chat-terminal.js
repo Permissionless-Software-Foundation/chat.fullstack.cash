@@ -40,6 +40,9 @@ class ChatTerminal extends React.Component {
               rows={20}
               value={`${chatOutput ? `${chatOutput}>` : '>'}`}
               readOnly
+              onChange={() => {
+                /** Prevents DOM error */
+              }}
             />
           </Col>
           <Col xs={3}>

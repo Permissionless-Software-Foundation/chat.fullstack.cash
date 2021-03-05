@@ -32,6 +32,9 @@ class StatusTerminal extends React.Component {
               rows={20}
               readOnly
               value={`${output ? `${output}>` : '>'}`}
+              onChange={() => {
+                /** Prevents DOM error */
+              }}
             />
           </Col>
         </Row>
