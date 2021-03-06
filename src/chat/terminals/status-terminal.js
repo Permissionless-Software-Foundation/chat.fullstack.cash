@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Row, Col, Inputs } from 'adminlte-2-react'
-import CommandRouter from '../lib/commands'
 const { Text } = Inputs
 
 let _this
@@ -12,7 +11,6 @@ class StatusTerminal extends React.Component {
     this.state = {
       output: ''
     }
-    this.commandRouter = new CommandRouter()
   }
 
   render () {
@@ -51,25 +49,14 @@ class StatusTerminal extends React.Component {
     }
   }
 
+  // Updates the terminal when the parent component recieves a status update
+  // from the ipfs-coord library.
   componentDidUpdate () {
     if (_this.state.output !== _this.props.log) {
       _this.setState({
         output: _this.props.log
       })
       _this.keepScrolled()
-    }
-  }
-
-  // Adds a line to the terminal
-  handleLog (str) {
-    try {
-      /*       _this.setState({
-        output: _this.state.output + '   ' + str + '\n'
-      }) */
-      _this.props.handleLog(str)
-      _this.keepScrolled()
-    } catch (error) {
-      console.warn(error)
     }
   }
 
