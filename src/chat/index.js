@@ -30,7 +30,7 @@ class Chat extends React.Component {
     const ipfsConfig = {
       handleLog: _this.onStatusLog,
       // handleChatLog: _this.onCommandLog
-      handleChatLog: _this.onChatLog
+      handleChatLog: _this.incommingChat
     }
     this.ipfsControl = new IpfsControl(ipfsConfig)
 
@@ -54,7 +54,7 @@ class Chat extends React.Component {
         <Col xs={12} lg={6}>
           {displayTerminal === 'Chat' && (
             <ChatTerminal
-              handleLog={_this.onChatLog}
+              handleLog={_this.myChat}
               log={_this.state.chatOutput}
               nickname={_this.state.nickname}
               ipfsControl={_this.ipfsControl}
@@ -94,25 +94,7 @@ class Chat extends React.Component {
     })
   }
 
-  // This should pipe data to the Status Terminal.
-  // handleLog (str) {
-  //   try {
-  //
-  //     _this.statusTerminal.handleLog(str)
-  //   } catch (error) {
-  //     console.warn(error)
-  //   }
-  // }
-
-  handleIncomingChatMsg (msg) {
-    try {
-      console.log(`handleIncomingChatMsg(): ${msg}`)
-    } catch (error) {
-      console.warn(error)
-    }
-  }
-
-  // Adds a line to the ipfs Status terminal
+  // Adds a line to the Status terminal
   onStatusLog (str) {
     try {
       _this.setState({
@@ -120,6 +102,38 @@ class Chat extends React.Component {
       })
     } catch (error) {
       console.warn(error)
+    }
+  }
+
+  // Handle chat messages coming in from the IPFS network.
+  incommingChat (str) {
+    try {
+      // console.log(`incommingChat str: ${JSON.stringify(str, null, 2)}`)
+
+      const msg = str.data.data.message
+      const handle = str.data.data.handle
+      const terminalOut = `${handle}: ${msg}`
+
+      _this.setState({
+        chatOutput: _this.state.chatOutput + '   ' + terminalOut + '\n'
+      })
+    } catch (err) {
+      console.warn(err)
+      // Don't throw an error as this is a top-level handler.
+    }
+  }
+
+  // Updates the Chat terminal with chat input from the user.
+  myChat (msg, nickname) {
+    try {
+      const terminalOut = `me: ${msg}`
+
+      _this.setState({
+        chatOutput: _this.state.chatOutput + '   ' + terminalOut + '\n',
+        nickname
+      })
+    } catch (err) {
+      console.warn('Error in myChat(): ', err)
     }
   }
 
