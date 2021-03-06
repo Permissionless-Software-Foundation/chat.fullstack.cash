@@ -44,7 +44,7 @@ class Chat extends React.Component {
   render () {
     const { displayTerminal } = _this.state
     return (
-      <Row className='chat-view'>
+      <Row className="chat-view">
         <Col xs={12}>
           <StatusBar />
         </Col>
@@ -126,8 +126,22 @@ class Chat extends React.Component {
   // Adds a line to the Chat terminal
   onChatLog (str, nickname) {
     try {
+      console.log(`onChatLog str: ${JSON.stringify(str, null, 2)}`)
+
+      console.log(`typeof str: ${typeof str}`)
+
+      let terminalOut = ''
+      if (typeof str === 'string') {
+        terminalOut = str
+      } else {
+        const msg = str.data.data.message
+        const handle = str.data.data.handle
+        terminalOut = `${handle}: ${msg}`
+      }
+      console.log(`terminalOut: ${terminalOut}`)
+
       _this.setState({
-        chatOutput: _this.state.chatOutput + '   ' + str + '\n',
+        chatOutput: _this.state.chatOutput + '   ' + terminalOut + '\n',
         nickname
       })
     } catch (error) {
