@@ -117,9 +117,9 @@ class Chat extends React.Component {
     try {
       console.log(`IPFS ID: ${ipfsId}`)
 
-      // TODO: Create a 'peer' component that displays the peers nickname
-      // and a new terminal for that peer, which will be used for e2e encrypted
-      // chat.
+      // TODO: Create a 'peer' component (a new button) that displays the peers
+      // nickname and a new terminal for that peer, which will be used for e2e
+      // encrypted chat.
     } catch (err) {
       console.warn('Error in handleNewPeer(): ', err)
     }
