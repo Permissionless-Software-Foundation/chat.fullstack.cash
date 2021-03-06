@@ -112,6 +112,7 @@ class ChatTerminal extends React.Component {
   handleChatBtn () {
     const msg = _this.state.chatInput
     const nickname = _this.state.nickname
+    // const nickname = _this.props.nickname
 
     _this.handleChatLog(`me: ${msg}`)
 
@@ -141,11 +142,10 @@ class ChatTerminal extends React.Component {
 
       const chatObj = {
         message: msg,
-        // handle: "browser"
-        handle: _this.state.handle
+        handle: _this.state.nickname
       }
 
-      console.log(`Sending "${msg}" to ${CHAT_ROOM_NAME}`)
+      // console.log(`Sending "${msg}" to ${CHAT_ROOM_NAME}`)
 
       const chatData = _this.ipfsControl.ipfsCoord.ipfs.schema.chat(chatObj)
       const chatDataStr = JSON.stringify(chatData)
