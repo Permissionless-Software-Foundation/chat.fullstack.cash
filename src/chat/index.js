@@ -97,11 +97,31 @@ class Chat extends React.Component {
   // Adds a line to the Status terminal
   onStatusLog (str) {
     try {
+      // Update the Status terminal
       _this.setState({
         statusOutput: _this.state.statusOutput + '   ' + str + '\n'
       })
+
+      // If a new peer is found, trigger handleNewPeer()
+      if (str.includes('New peer found:')) {
+        const ipfsId = str.substring(16)
+        _this.handleNewPeer(ipfsId)
+      }
     } catch (error) {
       console.warn(error)
+    }
+  }
+
+  // This function is triggered when a new peer is detected.
+  handleNewPeer (ipfsId) {
+    try {
+      console.log(`IPFS ID: ${ipfsId}`)
+
+      // TODO: Create a 'peer' component (a new button) that displays the peers
+      // nickname and a new terminal for that peer, which will be used for e2e
+      // encrypted chat.
+    } catch (err) {
+      console.warn('Error in handleNewPeer(): ', err)
     }
   }
 
