@@ -12,14 +12,13 @@ import IpfsCoord from 'ipfs-coord'
 // CHANGE THESE VARIABLES
 const CHAT_ROOM_NAME = 'psf-ipfs-chat-001'
 
-const BchWallet = typeof window !== 'undefined' ? window.SlpWallet : null
-
 let _this
 
 class IpfsControl {
   constructor (ipfsConfig) {
     this.handleLog = ipfsConfig.handleLog
     this.handleChatLog = ipfsConfig.handleChatLog
+    this.wallet = ipfsConfig.bchWallet
 
     _this = this
   }
@@ -35,9 +34,12 @@ class IpfsControl {
       this.handleLog('IPFS node created.')
 
       // Generate a new wallet.
-      this.wallet = new BchWallet()
+      // this.wallet = new BchWallet()
       // console.log("this.wallet: ", this.wallet);
 
+      if (!this.wallet) {
+        throw new Error('Wallet Not Found.! . Create or import a wallet')
+      }
       // Wait for the wallet to initialize.
       await this.wallet.walletInfoPromise
 
