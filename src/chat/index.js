@@ -50,10 +50,10 @@ class Chat extends React.Component {
         <Col xs={12}>
           <StatusBar />
         </Col>
-        <Col xs={12} lg={6}>
+        <Col xs={12} lg={6} className='nodes-container'>
           <Handler handleTerminal={_this.onHandleTerminal} peers={peers} />
         </Col>
-        <Col xs={12} lg={6}>
+        <Col xs={12} lg={6} className='terminals-container'>
           {displayTerminal === 'Chat' && (
             <ChatTerminal
               handleLog={_this.myChat}
@@ -84,6 +84,7 @@ class Chat extends React.Component {
   async componentDidMount () {
     try {
       await this.ipfsControl.startIpfs()
+      // _this.populatePeersWithMock()
     } catch (err) {
       console.error('Error in Chat componentDidMount(): ', err)
       // Do not throw an error. This is a top-level function.
@@ -92,9 +93,17 @@ class Chat extends React.Component {
 
   // Switch between the different terminals.
   onHandleTerminal (object) {
+    let { connectedPeer, chatOutput } = _this.state
+
+    // Verify if the selected terminal is a chat
+    if (object.peer && object.peer !== connectedPeer) {
+      connectedPeer = object.peer
+      chatOutput = ''
+    }
     _this.setState({
       displayTerminal: object.terminal,
-      connectedPeer: object.peer || _this.state.connectedPeer
+      connectedPeer,
+      chatOutput
     })
   }
 
@@ -208,6 +217,20 @@ class Chat extends React.Component {
       })
     } catch (error) {
       console.warn(error)
+    }
+  }
+
+  // Adds several test perrs
+  // Function with testing purposes
+  // to evaluate the UI behavior
+  // with a considerable amount of peers
+  populatePeersWithMock () {
+    try {
+      for (let i = 0; i < 10; i++) {
+        _this.handleNewPeer(`peer ${i}`)
+      }
+    } catch (error) {
+      console.warn('Error in populatePeersWithMock(): ', error)
     }
   }
 }

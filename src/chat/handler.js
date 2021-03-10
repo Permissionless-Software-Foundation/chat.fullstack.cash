@@ -8,7 +8,7 @@ class Handler extends React.Component {
     super(props)
     _this = this
     this.state = {
-      currentTerminal: 'Chat'
+      currentTerminal: 'All'
     }
   }
 
@@ -17,21 +17,12 @@ class Handler extends React.Component {
     const { peers } = _this.props
     return (
       <div>
-        <Row>
+        <Row className='chat-nodes'>
           <Col xs={12} className='content-box mb-1'>
             <h4>Online Nodes:{peers.length}</h4>
           </Col>
           <Col
-            xs={4}
-            onClick={() => _this.handlePeer('All')}
-            className={`content-box mb-1 white-border ${
-              currentTerminal === 'All' ? 'clicked-btn' : ''
-            }`}
-          >
-            <h4>ALL</h4>
-          </Col>
-          <Col
-            xs={4}
+            xs={6}
             onClick={() => _this.handleTerminal('Command')}
             className={`content-box mb-1 white-border ${
               currentTerminal === 'Command' ? 'clicked-btn' : ''
@@ -40,13 +31,23 @@ class Handler extends React.Component {
             <h4>Command</h4>
           </Col>
           <Col
-            xs={4}
+            xs={6}
             onClick={() => _this.handleTerminal('Status')}
             className={`content-box mb-1 white-border ${
               currentTerminal === 'Status' ? 'clicked-btn' : ''
             }`}
           >
             <h4>Status</h4>
+          </Col>
+
+          <Col
+            xs={12}
+            onClick={() => _this.handlePeer('All')}
+            className={`content-box mb-1 white-border ${
+              currentTerminal === 'All' ? 'clicked-btn' : ''
+            }`}
+          >
+            <h4>ALL</h4>
           </Col>
           {peers.map(val => {
             return (
