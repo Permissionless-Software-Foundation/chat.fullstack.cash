@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
 import { Row, Col } from 'adminlte-2-react'
 import Handler from './handler'
 import ChatTerminal from './terminals/chat-terminal'
@@ -16,7 +18,6 @@ let _this
 class Chat extends React.Component {
   constructor (props) {
     super(props)
-
     _this = this
 
     this.state = {
@@ -32,7 +33,8 @@ class Chat extends React.Component {
     const ipfsConfig = {
       handleLog: _this.onStatusLog,
       // handleChatLog: _this.onCommandLog
-      handleChatLog: _this.incommingChat
+      handleChatLog: _this.incommingChat,
+      bchWallet: props.bchWallet // bch wallet instance
     }
     this.ipfsControl = new IpfsControl(ipfsConfig)
 
@@ -234,5 +236,8 @@ class Chat extends React.Component {
     }
   }
 }
-
+// Props prvided by redux
+Chat.propTypes = {
+  bchWallet: PropTypes.object // get minimal-slp-wallet instance
+}
 export default Chat
