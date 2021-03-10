@@ -8,24 +8,24 @@ class Handler extends React.Component {
     super(props)
     _this = this
     this.state = {
-      nodes: [],
       currentTerminal: 'Chat'
     }
   }
 
   render () {
-    const { nodes, currentTerminal } = _this.state
+    const { currentTerminal } = _this.state
+    const { peers } = _this.props
     return (
       <div>
         <Row>
           <Col xs={12} className='content-box mb-1'>
-            <h4>Online Nodes:{nodes.length}</h4>
+            <h4>Online Nodes:{peers.length}</h4>
           </Col>
           <Col
             xs={4}
-            onClick={() => _this.handleTerminal('Chat')}
+            onClick={() => _this.handlePeer('All')}
             className={`content-box mb-1 white-border ${
-              currentTerminal === 'Chat' ? 'clicked-btn' : ''
+              currentTerminal === 'All' ? 'clicked-btn' : ''
             }`}
           >
             <h4>ALL</h4>
@@ -48,21 +48,53 @@ class Handler extends React.Component {
           >
             <h4>Status</h4>
           </Col>
+          {peers.map(val => {
+            return (
+              <Col
+                key={val}
+                xs={12}
+                onClick={() => _this.handlePeer(val)}
+                className={`content-box mb-1 white-border ${
+                  currentTerminal === val ? 'clicked-btn' : ''
+                }`}
+              >
+                <h5>{val}</h5>
+              </Col>
+            )
+          })}
         </Row>
       </div>
     )
   }
 
   componentDidMount () {}
+
+  handlePeer (peer) {
+    try {
+      _this.setState({
+        currentTerminal: peer
+      })
+      _this.props.handleTerminal({ terminal: 'Chat', peer })
+    } catch (error) {
+      console.warn('Error in handler.js/handlePeer(): ', error)
+    }
+  }
+
   handleTerminal (val) {
-    _this.setState({
-      currentTerminal: val
-    })
-    _this.props.handleTerminal(val)
+    try {
+      _this.setState({
+        currentTerminal: val
+      })
+
+      _this.props.handleTerminal({ terminal: val })
+    } catch (error) {
+      console.warn('Error in handler.js/handleTerminal(): ', error)
+    }
   }
 }
 Handler.propTypes = {
-  handleTerminal: PropTypes.func
+  handleTerminal: PropTypes.func,
+  peers: PropTypes.array
 }
 
 export default Handler

@@ -24,7 +24,9 @@ class Chat extends React.Component {
       statusOutput: '',
       commandOutput: "Enter 'help' to see available commands.",
       chatOutput: '',
-      nickname: 'Nicknames'
+      nickname: 'Nicknames',
+      peers: [],
+      connectedPeer: 'All'
     }
 
     const ipfsConfig = {
@@ -42,14 +44,14 @@ class Chat extends React.Component {
   }
 
   render () {
-    const { displayTerminal } = _this.state
+    const { displayTerminal, peers, connectedPeer } = _this.state
     return (
-      <Row className="chat-view">
+      <Row className='chat-view'>
         <Col xs={12}>
           <StatusBar />
         </Col>
         <Col xs={12} lg={6}>
-          <Handler handleTerminal={_this.onHandleTerminal} />
+          <Handler handleTerminal={_this.onHandleTerminal} peers={peers} />
         </Col>
         <Col xs={12} lg={6}>
           {displayTerminal === 'Chat' && (
@@ -58,6 +60,7 @@ class Chat extends React.Component {
               log={_this.state.chatOutput}
               nickname={_this.state.nickname}
               ipfsControl={_this.ipfsControl}
+              chatWith={connectedPeer}
             />
           )}
           {displayTerminal === 'Command' && (
@@ -82,15 +85,16 @@ class Chat extends React.Component {
     try {
       await this.ipfsControl.startIpfs()
     } catch (err) {
-      console.error('Erro in Chat componentDidMount(): ', err)
+      console.error('Error in Chat componentDidMount(): ', err)
       // Do not throw an error. This is a top-level function.
     }
   }
 
   // Switch between the different terminals.
-  onHandleTerminal (val) {
+  onHandleTerminal (object) {
     _this.setState({
-      displayTerminal: val
+      displayTerminal: object.terminal,
+      connectedPeer: object.peer || _this.state.connectedPeer
     })
   }
 
@@ -120,6 +124,13 @@ class Chat extends React.Component {
       // TODO: Create a 'peer' component (a new button) that displays the peers
       // nickname and a new terminal for that peer, which will be used for e2e
       // encrypted chat.
+      const { peers } = _this.state
+
+      peers.push(ipfsId.substring(0, 8))
+
+      _this.setState({
+        peers
+      })
     } catch (err) {
       console.warn('Error in handleNewPeer(): ', err)
     }
