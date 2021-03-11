@@ -15,3 +15,12 @@
 .clicked-btn{
     opacity: 0.8;
 }
+.chat-nodes{
+    max-height: 60vh;
+    overflow-y: overlay;
+}
+@media screen and (max-width: 700px) {
+    .terminals-container{
+        margin-top: 3em;
+    }
+  }

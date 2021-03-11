@@ -13,7 +13,6 @@ class ChatTerminal extends React.Component {
 
     this.state = {
       chatOutput: '',
-      chatWith: 'All',
       chatInput: '',
       nickname: 'Nickname'
     }
@@ -24,12 +23,12 @@ class ChatTerminal extends React.Component {
   }
 
   render () {
-    const { chatOutput, chatWith, chatInput } = _this.state
+    const { chatOutput, chatInput } = _this.state
     return (
       <div>
         <Row>
           <Col xs={12} className='text-center content-box '>
-            <h4>Chat With : {chatWith}</h4>
+            <h4>Chat With : {_this.props.chatWith}</h4>
           </Col>
           <Col xs={12} className='mt-1'>
             <Text

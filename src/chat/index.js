@@ -25,7 +25,9 @@ class Chat extends React.Component {
       statusOutput: '',
       commandOutput: "Enter 'help' to see available commands.",
       chatOutput: '',
-      nickname: 'Nicknames'
+      nickname: 'Nicknames',
+      peers: [],
+      connectedPeer: 'All'
     }
 
     const ipfsConfig = {
@@ -44,22 +46,23 @@ class Chat extends React.Component {
   }
 
   render () {
-    const { displayTerminal } = _this.state
+    const { displayTerminal, peers, connectedPeer } = _this.state
     return (
       <Row className='chat-view'>
         <Col xs={12}>
           <StatusBar />
         </Col>
-        <Col xs={12} lg={6}>
-          <Handler handleTerminal={_this.onHandleTerminal} />
+        <Col xs={12} lg={6} className='nodes-container'>
+          <Handler handleTerminal={_this.onHandleTerminal} peers={peers} />
         </Col>
-        <Col xs={12} lg={6}>
+        <Col xs={12} lg={6} className='terminals-container'>
           {displayTerminal === 'Chat' && (
             <ChatTerminal
               handleLog={_this.myChat}
               log={_this.state.chatOutput}
               nickname={_this.state.nickname}
               ipfsControl={_this.ipfsControl}
+              chatWith={connectedPeer}
             />
           )}
           {displayTerminal === 'Command' && (
@@ -83,16 +86,26 @@ class Chat extends React.Component {
   async componentDidMount () {
     try {
       await this.ipfsControl.startIpfs()
+      // _this.populatePeersWithMock()
     } catch (err) {
-      console.error('Erro in Chat componentDidMount(): ', err)
+      console.error('Error in Chat componentDidMount(): ', err)
       // Do not throw an error. This is a top-level function.
     }
   }
 
   // Switch between the different terminals.
-  onHandleTerminal (val) {
+  onHandleTerminal (object) {
+    let { connectedPeer, chatOutput } = _this.state
+
+    // Verify if the selected terminal is a chat
+    if (object.peer && object.peer !== connectedPeer) {
+      connectedPeer = object.peer
+      chatOutput = ''
+    }
     _this.setState({
-      displayTerminal: val
+      displayTerminal: object.terminal,
+      connectedPeer,
+      chatOutput
     })
   }
 
@@ -122,6 +135,13 @@ class Chat extends React.Component {
       // TODO: Create a 'peer' component (a new button) that displays the peers
       // nickname and a new terminal for that peer, which will be used for e2e
       // encrypted chat.
+      const { peers } = _this.state
+
+      peers.push(ipfsId.substring(0, 8))
+
+      _this.setState({
+        peers
+      })
     } catch (err) {
       console.warn('Error in handleNewPeer(): ', err)
     }
@@ -199,6 +219,20 @@ class Chat extends React.Component {
       })
     } catch (error) {
       console.warn(error)
+    }
+  }
+
+  // Adds several test perrs
+  // Function with testing purposes
+  // to evaluate the UI behavior
+  // with a considerable amount of peers
+  populatePeersWithMock () {
+    try {
+      for (let i = 0; i < 10; i++) {
+        _this.handleNewPeer(`peer ${i}`)
+      }
+    } catch (error) {
+      console.warn('Error in populatePeersWithMock(): ', error)
     }
   }
 }
