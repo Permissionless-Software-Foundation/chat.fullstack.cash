@@ -24,7 +24,15 @@ class Chat extends React.Component {
       displayTerminal: 'Chat',
       statusOutput: '',
       commandOutput: "Enter 'help' to see available commands.",
-      chatOutput: '',
+      // This property contains an object that
+      // will have the record of the different outputs
+      // corresponding to each chat
+      chatOutputs: {
+        All: {
+          output: '',
+          nickname: ''
+        }
+      },
       nickname: 'Nicknames',
       peers: [],
       connectedPeer: 'All'
@@ -46,7 +54,12 @@ class Chat extends React.Component {
   }
 
   render () {
-    const { displayTerminal, peers, connectedPeer } = _this.state
+    const { displayTerminal, peers, connectedPeer, chatOutputs } = _this.state
+
+    // Obtains the registered chat of the selected peer
+    const output = chatOutputs[connectedPeer]
+      ? chatOutputs[connectedPeer].output
+      : ''
     return (
       <Row className='chat-view'>
         <Col xs={12}>
@@ -59,7 +72,7 @@ class Chat extends React.Component {
           {displayTerminal === 'Chat' && (
             <ChatTerminal
               handleLog={_this.myChat}
-              log={_this.state.chatOutput}
+              log={output}
               nickname={_this.state.nickname}
               ipfsControl={_this.ipfsControl}
               chatWith={connectedPeer}
@@ -95,17 +108,15 @@ class Chat extends React.Component {
 
   // Switch between the different terminals.
   onHandleTerminal (object) {
-    let { connectedPeer, chatOutput } = _this.state
+    let { connectedPeer } = _this.state
 
     // Verify if the selected terminal is a chat
     if (object.peer && object.peer !== connectedPeer) {
       connectedPeer = object.peer
-      chatOutput = ''
     }
     _this.setState({
       displayTerminal: object.terminal,
-      connectedPeer,
-      chatOutput
+      connectedPeer
     })
   }
 
@@ -135,12 +146,20 @@ class Chat extends React.Component {
       // TODO: Create a 'peer' component (a new button) that displays the peers
       // nickname and a new terminal for that peer, which will be used for e2e
       // encrypted chat.
-      const { peers } = _this.state
+      const { peers, chatOutputs } = _this.state
+      const shortIpfsId = ipfsId.substring(0, 8)
+      peers.push(shortIpfsId)
 
-      peers.push(ipfsId.substring(0, 8))
+      // Set default chat values for this peer
+      const obj = {
+        output: '',
+        nickname: ''
+      }
+      chatOutputs[shortIpfsId] = obj
 
       _this.setState({
-        peers
+        peers,
+        chatOutputs
       })
     } catch (err) {
       console.warn('Error in handleNewPeer(): ', err)
@@ -150,14 +169,19 @@ class Chat extends React.Component {
   // Handle chat messages coming in from the IPFS network.
   incommingChat (str) {
     try {
-      // console.log(`incommingChat str: ${JSON.stringify(str, null, 2)}`)
+      const { chatOutputs, connectedPeer } = _this.state
+      console.log(`incommingChat str: ${JSON.stringify(str, null, 2)}`)
 
       const msg = str.data.data.message
       const handle = str.data.data.handle
       const terminalOut = `${handle}: ${msg}`
 
+      // Asigns the output to the corresponding peer
+      chatOutputs[connectedPeer].output =
+        chatOutputs[connectedPeer].output + terminalOut + '\n'
+
       _this.setState({
-        chatOutput: _this.state.chatOutput + '   ' + terminalOut + '\n'
+        chatOutputs
       })
     } catch (err) {
       console.warn(err)
@@ -168,10 +192,15 @@ class Chat extends React.Component {
   // Updates the Chat terminal with chat input from the user.
   myChat (msg, nickname) {
     try {
+      const { chatOutputs, connectedPeer } = _this.state
       const terminalOut = `me: ${msg}`
 
+      // Asigns the output to the corresponding peer
+      chatOutputs[connectedPeer].output =
+        chatOutputs[connectedPeer].output + terminalOut + '\n'
+
       _this.setState({
-        chatOutput: _this.state.chatOutput + '   ' + terminalOut + '\n',
+        chatOutputs,
         nickname
       })
     } catch (err) {

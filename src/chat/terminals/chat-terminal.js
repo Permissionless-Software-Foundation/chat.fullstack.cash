@@ -83,10 +83,14 @@ class ChatTerminal extends React.Component {
     // Restore the terminal log after rendering this component.
     if (_this.state.chatOutput !== _this.props.log) {
       _this.setState({
-        chatOutput: _this.props.log,
-        nickname: _this.props.nickname
+        chatOutput: _this.props.log
       })
       _this.keepChatScrolled()
+    }
+    if (_this.state.nickname !== _this.props.nickname) {
+      _this.setState({
+        nickname: _this.props.nickname
+      })
     }
   }
 
