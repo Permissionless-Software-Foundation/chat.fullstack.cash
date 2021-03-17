@@ -141,19 +141,21 @@ class Chat extends React.Component {
   // This function is triggered when a new peer is detected.
   handleNewPeer (ipfsId) {
     try {
-      console.log(`IPFS ID: ${ipfsId}`)
+      console.log(`New IPFS peer discovered. ID: ${ipfsId}`)
 
-      // Use the first 8 letters of the peer IPFS ID to identify the peers state.
+      // Use the peer IPFS ID to identify the peers state.
       const { peers, chatOutputs } = _this.state
-      const shortIpfsId = ipfsId.substring(0, 8)
-      peers.push(shortIpfsId)
+      // const shortIpfsId = ipfsId.substring(0, 8)
+      // peers.push(shortIpfsId)
+      peers.push(ipfsId)
 
       // Add a chatOutput entry for the new peer.
       const obj = {
         output: '',
         nickname: ''
       }
-      chatOutputs[shortIpfsId] = obj
+      // chatOutputs[shortIpfsId] = obj
+      chatOutputs[ipfsId] = obj
 
       _this.setState({
         peers,
