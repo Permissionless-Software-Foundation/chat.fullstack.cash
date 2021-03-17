@@ -174,6 +174,7 @@ class ChatTerminal extends React.Component {
       // Package the message.
       const chatData = _this.ipfsControl.ipfsCoord.ipfs.schema.chat(chatObj)
       const chatDataStr = JSON.stringify(chatData)
+      console.log(`chatDataStr: ${chatDataStr}`)
 
       // Send the message to the IPFS pubsub channel.
       await _this.ipfsControl.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(
