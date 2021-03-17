@@ -27,15 +27,15 @@ class ChatTerminal extends React.Component {
     return (
       <div>
         <Row>
-          <Col xs={12} className='text-center content-box '>
+          <Col xs={12} className="text-center content-box ">
             <h4>Chat With : {_this.props.chatWith}</h4>
           </Col>
-          <Col xs={12} className='mt-1'>
+          <Col xs={12} className="mt-1">
             <Text
-              id='chatTerminal'
-              name='chatTerminal'
-              inputType='textarea'
-              labelPosition='none'
+              id="chatTerminal"
+              name="chatTerminal"
+              inputType="textarea"
+              labelPosition="none"
               rows={20}
               value={`${chatOutput ? `${chatOutput}>` : '>'}`}
               readOnly
@@ -46,29 +46,29 @@ class ChatTerminal extends React.Component {
           </Col>
           <Col xs={3}>
             <Text
-              id='nickname'
-              name='nickname'
-              inputType='text'
-              labelPosition='none'
-              placeholder='Nickname'
+              id="nickname"
+              name="nickname"
+              inputType="text"
+              labelPosition="none"
+              placeholder="Nickname"
               onChange={this.handleNickname}
               value={this.state.nickname}
             />
           </Col>
           <Col xs={9}>
             <Text
-              id='chatInput'
-              name='chatInput'
-              inputType='text'
-              labelPosition='none'
-              placeholder='type message'
+              id="chatInput"
+              name="chatInput"
+              inputType="text"
+              labelPosition="none"
+              placeholder="type message"
               value={chatInput}
               onChange={this.handleTextInput}
               onKeyDown={_this.handleChatKeyDown}
               buttonRight={
                 <Button
-                  type='primary'
-                  text='Send.'
+                  type="primary"
+                  text="Send."
                   onClick={_this.handleChatBtn}
                 />
               }
@@ -155,9 +155,14 @@ class ChatTerminal extends React.Component {
   // Send the chat message to the IPFS pubsub room.
   async sendMsgToIpfs () {
     try {
+      const connectedPeer = _this.props.chatWith
       const msg = _this.state.chatInput
+      console.log(`Sending to ipfs: ${msg} to peer ${connectedPeer}`)
 
-      const CHAT_ROOM_NAME = 'psf-ipfs-chat-001'
+      // Figure out if we're posting to the general chat channel, or a private
+      // message to a peer.
+      let CHAT_ROOM_NAME = 'psf-ipfs-chat-001'
+      if (connectedPeer !== 'All') CHAT_ROOM_NAME = connectedPeer
 
       const chatObj = {
         message: msg,

@@ -47,7 +47,7 @@ class IpfsControl {
       this.ipfsCoord = new IpfsCoord({
         ipfs: this.ipfs,
         type: 'browser',
-        logHandler: this.handleLog,
+        logHandler: this.handleLog, // Status log
         bchjs: this.wallet.bchjs,
         mnemonic: this.wallet.walletInfo.mnemonic
       })

@@ -143,14 +143,12 @@ class Chat extends React.Component {
     try {
       console.log(`IPFS ID: ${ipfsId}`)
 
-      // TODO: Create a 'peer' component (a new button) that displays the peers
-      // nickname and a new terminal for that peer, which will be used for e2e
-      // encrypted chat.
+      // Use the first 8 letters of the peer IPFS ID to identify the peers state.
       const { peers, chatOutputs } = _this.state
       const shortIpfsId = ipfsId.substring(0, 8)
       peers.push(shortIpfsId)
 
-      // Set default chat values for this peer
+      // Add a chatOutput entry for the new peer.
       const obj = {
         output: '',
         nickname: ''
@@ -170,15 +168,22 @@ class Chat extends React.Component {
   incommingChat (str) {
     try {
       const { chatOutputs, connectedPeer } = _this.state
+      console.log(`connectedPeer: ${JSON.stringify(connectedPeer, null, 2)}`)
       console.log(`incommingChat str: ${JSON.stringify(str, null, 2)}`)
 
       const msg = str.data.data.message
       const handle = str.data.data.handle
       const terminalOut = `${handle}: ${msg}`
 
-      // Asigns the output to the corresponding peer
-      chatOutputs[connectedPeer].output =
-        chatOutputs[connectedPeer].output + terminalOut + '\n'
+      if (str.data && str.data.apiName && str.data.apiName.includes('chat')) {
+        // If the message is marked as 'chat' data, then post it to the public
+        // chat terminal.
+        chatOutputs.All.output = chatOutputs.All.output + terminalOut + '\n'
+      } else {
+        // Asigns the output to the corresponding peer
+        chatOutputs[connectedPeer].output =
+          chatOutputs[connectedPeer].output + terminalOut + '\n'
+      }
 
       _this.setState({
         chatOutputs
@@ -195,9 +200,14 @@ class Chat extends React.Component {
       const { chatOutputs, connectedPeer } = _this.state
       const terminalOut = `me: ${msg}`
 
-      // Asigns the output to the corresponding peer
-      chatOutputs[connectedPeer].output =
-        chatOutputs[connectedPeer].output + terminalOut + '\n'
+      if (connectedPeer === 'All') {
+        chatOutputs.All.output =
+          chatOutputs.All.output + terminalOut + '\n'
+      } else {
+        // Asigns the output to the corresponding peer
+        chatOutputs[connectedPeer].output =
+          chatOutputs[connectedPeer].output + terminalOut + '\n'
+      }
 
       _this.setState({
         chatOutputs,
@@ -265,6 +275,7 @@ class Chat extends React.Component {
     }
   }
 }
+
 // Props prvided by redux
 Chat.propTypes = {
   bchWallet: PropTypes.object // get minimal-slp-wallet instance
