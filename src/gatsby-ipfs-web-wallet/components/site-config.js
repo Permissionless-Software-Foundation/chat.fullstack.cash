@@ -4,21 +4,21 @@
 */
 
 const config = {
-  title: 'Wallet Demo',
-  titleShort: 'Demo',
+  title: 'P2P Chat',
+  titleShort: 'Chat',
   balanceText: 'BCH Balance',
   balanceIcon: 'fab-bitcoin',
 
   // The BCH address used in a memo.cash account. Used for tracking the IPFS
   // hash of the mirror of this site.
-  memoAddr: 'bitcoincash:qzr4s6fwk55zvl7xqsjpr4k7zkqfmvcz7qapxys8t5',
+  memoAddr: 'bitcoincash:qqy59nllta74xlxvu47m4z6hqy92p7mg9sjxgnq7c6',
 
   // Footer Information
   hostText: 'FullStack.cash',
   hostUrl: 'https://fullstack.cash/',
-  sourceCode: 'https://github.com/Permissionless-Software-Foundation/bch-wallet-starter',
-  torUrl: 'tozqhxcrknbv5l3wshwgj6vp3bj5ezw7qp4jdn4bjrhcpetpcq74j7ad.onion',
-  clearWebUrl: 'https://demo-wallet.fullstack.cash'
+  sourceCode: 'https://github.com/Permissionless-Software-Foundation/chat.fullstack.cash',
+  torUrl: 'dgrsg7ghtpyudmfvf52k4kgfqzszfdmu5z6mnbi7crwfmy6daiybsuid.onion',
+  clearWebUrl: 'https://chat.fullstack.cash'
 }
 
 module.exports = config
