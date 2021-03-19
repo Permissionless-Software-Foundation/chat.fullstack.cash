@@ -1,3 +1,7 @@
+/*
+  This is the top-level app that controls the Chat View on chat.fullstack.cash.
+*/
+
 import React from 'react'
 import PropTypes from 'prop-types'
 
@@ -42,7 +46,8 @@ class Chat extends React.Component {
       statusLog: _this.onStatusLog,
       // handleChatLog: _this.onCommandLog
       handleChatLog: _this.incommingChat,
-      bchWallet: props.bchWallet // bch wallet instance
+      bchWallet: props.bchWallet, // bch wallet instance
+      privateLog: _this.privLogChat
     }
     this.ipfsControl = new IpfsControl(ipfsConfig)
 
@@ -61,14 +66,14 @@ class Chat extends React.Component {
       ? chatOutputs[connectedPeer].output
       : ''
     return (
-      <Row className='chat-view'>
+      <Row className="chat-view">
         <Col xs={12}>
           <StatusBar />
         </Col>
-        <Col xs={12} lg={6} className='nodes-container'>
+        <Col xs={12} lg={6} className="nodes-container">
           <Handler handleTerminal={_this.onHandleTerminal} peers={peers} />
         </Col>
-        <Col xs={12} lg={6} className='terminals-container'>
+        <Col xs={12} lg={6} className="terminals-container">
           {displayTerminal === 'Chat' && (
             <ChatTerminal
               handleLog={_this.myChat}
@@ -145,8 +150,8 @@ class Chat extends React.Component {
 
       // Use the peer IPFS ID to identify the peers state.
       const { peers, chatOutputs } = _this.state
-      // const shortIpfsId = ipfsId.substring(0, 8)
-      // peers.push(shortIpfsId)
+
+      // Add the new peer to the peers array.
       peers.push(ipfsId)
 
       // Add a chatOutput entry for the new peer.
@@ -163,6 +168,31 @@ class Chat extends React.Component {
       })
     } catch (err) {
       console.warn('Error in handleNewPeer(): ', err)
+    }
+  }
+
+  // Handle decrypted, private messages and send them to the right terminal.
+  privLogChat (str) {
+    try {
+      // console.log(`privLogChat str: ${str}`)
+
+      // Split the string into an ID and a message
+      const [id, msg] = str.split(': ')
+
+      // console.log(`privLogChat2 ${id}: ${msg}`)
+
+      const { chatOutputs } = _this.state
+
+      const terminalOut = `peer: ${msg}`
+
+      // Asigns the output to the corresponding peer
+      chatOutputs[id].output = chatOutputs[id].output + terminalOut + '\n'
+
+      _this.setState({
+        chatOutputs
+      })
+    } catch (err) {
+      console.warn('Error in privLogChat():', err)
     }
   }
 
@@ -203,8 +233,7 @@ class Chat extends React.Component {
       const terminalOut = `me: ${msg}`
 
       if (connectedPeer === 'All') {
-        chatOutputs.All.output =
-          chatOutputs.All.output + terminalOut + '\n'
+        chatOutputs.All.output = chatOutputs.All.output + terminalOut + '\n'
       } else {
         // Asigns the output to the corresponding peer
         chatOutputs[connectedPeer].output =

@@ -19,6 +19,7 @@ class IpfsControl {
     this.statusLog = ipfsConfig.statusLog
     this.handleChatLog = ipfsConfig.handleChatLog
     this.wallet = ipfsConfig.bchWallet
+    this.privateLog = ipfsConfig.privateLog
 
     _this = this
   }
@@ -49,7 +50,8 @@ class IpfsControl {
         type: 'browser',
         statusLog: this.statusLog, // Status log
         bchjs: this.wallet.bchjs,
-        mnemonic: this.wallet.walletInfo.mnemonic
+        mnemonic: this.wallet.walletInfo.mnemonic,
+        privateLog: this.privateLog
       })
       this.statusLog('ipfs-coord library instantiated.')
 
@@ -76,7 +78,7 @@ class IpfsControl {
       _this.statusLog(' ')
     } catch (err) {
       console.error('Error in startIpfs(): ', err)
-      this.statusLog('Error trying to initialize IPFS node!')
+      this.statusLog('Error trying to initialize IPFS node! Have you created a wallet?')
     }
   }
 
