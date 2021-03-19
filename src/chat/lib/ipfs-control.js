@@ -16,7 +16,7 @@ let _this
 
 class IpfsControl {
   constructor (ipfsConfig) {
-    this.handleLog = ipfsConfig.handleLog
+    this.statusLog = ipfsConfig.statusLog
     this.handleChatLog = ipfsConfig.handleChatLog
     this.wallet = ipfsConfig.bchWallet
 
@@ -28,10 +28,10 @@ class IpfsControl {
   async startIpfs () {
     try {
       console.log('Setting up instance of IPFS...')
-      this.handleLog('Setting up instance  of IPFS...')
+      this.statusLog('Setting up instance  of IPFS...')
 
       this.ipfs = await IPFS.create()
-      this.handleLog('IPFS node created.')
+      this.statusLog('IPFS node created.')
 
       // Generate a new wallet.
       // this.wallet = new BchWallet()
@@ -47,11 +47,11 @@ class IpfsControl {
       this.ipfsCoord = new IpfsCoord({
         ipfs: this.ipfs,
         type: 'browser',
-        logHandler: this.handleLog, // Status log
+        statusLog: this.statusLog, // Status log
         bchjs: this.wallet.bchjs,
         mnemonic: this.wallet.walletInfo.mnemonic
       })
-      this.handleLog('ipfs-coord library instantiated.')
+      this.statusLog('ipfs-coord library instantiated.')
 
       // Wait for the coordination stuff to be setup.
       await this.ipfsCoord.isReady()
@@ -69,14 +69,14 @@ class IpfsControl {
       // Get this nodes IPFS ID
       const id = await this.ipfs.id()
       this.ipfsId = id.id
-      this.handleLog(`This IPFS node ID: ${this.ipfsId}`)
+      this.statusLog(`This IPFS node ID: ${this.ipfsId}`)
 
       console.log('IPFS node setup complete.')
-      this.handleLog('IPFS node setup complete.')
-      _this.handleLog(' ')
+      this.statusLog('IPFS node setup complete.')
+      _this.statusLog(' ')
     } catch (err) {
       console.error('Error in startIpfs(): ', err)
-      this.handleLog('Error trying to initialize IPFS node!')
+      this.statusLog('Error trying to initialize IPFS node!')
     }
   }
 

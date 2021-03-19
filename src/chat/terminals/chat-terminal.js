@@ -162,25 +162,39 @@ class ChatTerminal extends React.Component {
       // Figure out if we're posting to the general chat channel, or a private
       // message to a peer.
       let CHAT_ROOM_NAME = 'psf-ipfs-chat-001'
-      if (connectedPeer !== 'All') CHAT_ROOM_NAME = connectedPeer
+      if (connectedPeer !== 'All') {
+        // This is a private, p2p message.
+        CHAT_ROOM_NAME = connectedPeer
 
-      const chatObj = {
-        message: msg,
-        handle: _this.state.nickname
+        // Get the IPFS peer that we're trying to talk to.
+        const thisPeer =
+          _this.ipfsControl.ipfsCoord.ipfs.peers.state.peers[connectedPeer]
+
+        // Send an e2e message to the peer.
+        await _this.ipfsControl.ipfsCoord.ipfs.encrypt.sendEncryptedMsg(
+          thisPeer,
+          msg
+        )
+      } else {
+        // This is a chat message for the public chat room.
+        const chatObj = {
+          message: msg,
+          handle: _this.state.nickname
+        }
+
+        // console.log(`Sending "${msg}" to ${CHAT_ROOM_NAME}`)
+
+        // Package the message.
+        const chatData = _this.ipfsControl.ipfsCoord.ipfs.schema.chat(chatObj)
+        const chatDataStr = JSON.stringify(chatData)
+        console.log(`chatDataStr: ${chatDataStr}`)
+
+        // Send the message to the IPFS pubsub channel.
+        await _this.ipfsControl.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(
+          CHAT_ROOM_NAME,
+          chatDataStr
+        )
       }
-
-      // console.log(`Sending "${msg}" to ${CHAT_ROOM_NAME}`)
-
-      // Package the message.
-      const chatData = _this.ipfsControl.ipfsCoord.ipfs.schema.chat(chatObj)
-      const chatDataStr = JSON.stringify(chatData)
-      console.log(`chatDataStr: ${chatDataStr}`)
-
-      // Send the message to the IPFS pubsub channel.
-      await _this.ipfsControl.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(
-        CHAT_ROOM_NAME,
-        chatDataStr
-      )
     } catch (err) {
       console.warn('Error in sendMsgToIpfs()')
       throw err

@@ -39,7 +39,7 @@ class Chat extends React.Component {
     }
 
     const ipfsConfig = {
-      handleLog: _this.onStatusLog,
+      statusLog: _this.onStatusLog,
       // handleChatLog: _this.onCommandLog
       handleChatLog: _this.incommingChat,
       bchWallet: props.bchWallet // bch wallet instance
@@ -47,7 +47,7 @@ class Chat extends React.Component {
     this.ipfsControl = new IpfsControl(ipfsConfig)
 
     // CT: Should I instantiate the components here? I want to pass the log
-    // handler to the IpfsControl library. Maybe we should make the handleLog()
+    // handler to the IpfsControl library. Maybe we should make the statusLog()
     // function a static function for the component Class?
     // this.statusTerminal = new StatusTerminal()
     // this.commandTerminal = new CommandTerminal()
