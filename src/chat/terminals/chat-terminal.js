@@ -27,15 +27,15 @@ class ChatTerminal extends React.Component {
     return (
       <div>
         <Row>
-          <Col xs={12} className='text-center content-box '>
+          <Col xs={12} className="text-center content-box ">
             <h4>Chat With : {_this.props.chatWith}</h4>
           </Col>
-          <Col xs={12} className='mt-1'>
+          <Col xs={12} className="mt-1">
             <Text
-              id='chatTerminal'
-              name='chatTerminal'
-              inputType='textarea'
-              labelPosition='none'
+              id="chatTerminal"
+              name="chatTerminal"
+              inputType="textarea"
+              labelPosition="none"
               rows={20}
               value={`${chatOutput ? `${chatOutput}>` : '>'}`}
               readOnly
@@ -46,29 +46,29 @@ class ChatTerminal extends React.Component {
           </Col>
           <Col xs={3}>
             <Text
-              id='nickname'
-              name='nickname'
-              inputType='text'
-              labelPosition='none'
-              placeholder='Nickname'
+              id="nickname"
+              name="nickname"
+              inputType="text"
+              labelPosition="none"
+              placeholder="Nickname"
               onChange={this.handleNickname}
               value={this.state.nickname}
             />
           </Col>
           <Col xs={9}>
             <Text
-              id='chatInput'
-              name='chatInput'
-              inputType='text'
-              labelPosition='none'
-              placeholder='type message'
+              id="chatInput"
+              name="chatInput"
+              inputType="text"
+              labelPosition="none"
+              placeholder="type message"
               value={chatInput}
               onChange={this.handleTextInput}
               onKeyDown={_this.handleChatKeyDown}
               buttonRight={
                 <Button
-                  type='primary'
-                  text='Send.'
+                  type="primary"
+                  text="Send."
                   onClick={_this.handleChatBtn}
                 />
               }
@@ -155,26 +155,46 @@ class ChatTerminal extends React.Component {
   // Send the chat message to the IPFS pubsub room.
   async sendMsgToIpfs () {
     try {
+      const connectedPeer = _this.props.chatWith
       const msg = _this.state.chatInput
+      console.log(`Sending to ipfs: ${msg} to peer ${connectedPeer}`)
 
-      const CHAT_ROOM_NAME = 'psf-ipfs-chat-001'
+      // Figure out if we're posting to the general chat channel, or a private
+      // message to a peer.
+      let CHAT_ROOM_NAME = 'psf-ipfs-chat-001'
+      if (connectedPeer !== 'All') {
+        // This is a private, p2p message.
+        CHAT_ROOM_NAME = connectedPeer
 
-      const chatObj = {
-        message: msg,
-        handle: _this.state.nickname
+        // Get the IPFS peer that we're trying to talk to.
+        const thisPeer =
+          _this.ipfsControl.ipfsCoord.ipfs.peers.state.peers[connectedPeer]
+
+        // Send an e2e message to the peer.
+        await _this.ipfsControl.ipfsCoord.ipfs.encrypt.sendEncryptedMsg(
+          thisPeer,
+          msg
+        )
+      } else {
+        // This is a chat message for the public chat room.
+        const chatObj = {
+          message: msg,
+          handle: _this.state.nickname
+        }
+
+        // console.log(`Sending "${msg}" to ${CHAT_ROOM_NAME}`)
+
+        // Package the message.
+        const chatData = _this.ipfsControl.ipfsCoord.ipfs.schema.chat(chatObj)
+        const chatDataStr = JSON.stringify(chatData)
+        console.log(`chatDataStr: ${chatDataStr}`)
+
+        // Send the message to the IPFS pubsub channel.
+        await _this.ipfsControl.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(
+          CHAT_ROOM_NAME,
+          chatDataStr
+        )
       }
-
-      // console.log(`Sending "${msg}" to ${CHAT_ROOM_NAME}`)
-
-      // Package the message.
-      const chatData = _this.ipfsControl.ipfsCoord.ipfs.schema.chat(chatObj)
-      const chatDataStr = JSON.stringify(chatData)
-
-      // Send the message to the IPFS pubsub channel.
-      await _this.ipfsControl.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(
-        CHAT_ROOM_NAME,
-        chatDataStr
-      )
     } catch (err) {
       console.warn('Error in sendMsgToIpfs()')
       throw err

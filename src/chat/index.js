@@ -1,3 +1,7 @@
+/*
+  This is the top-level app that controls the Chat View on chat.fullstack.cash.
+*/
+
 import React from 'react'
 import PropTypes from 'prop-types'
 
@@ -39,15 +43,16 @@ class Chat extends React.Component {
     }
 
     const ipfsConfig = {
-      handleLog: _this.onStatusLog,
+      statusLog: _this.onStatusLog,
       // handleChatLog: _this.onCommandLog
       handleChatLog: _this.incommingChat,
-      bchWallet: props.bchWallet // bch wallet instance
+      bchWallet: props.bchWallet, // bch wallet instance
+      privateLog: _this.privLogChat
     }
     this.ipfsControl = new IpfsControl(ipfsConfig)
 
     // CT: Should I instantiate the components here? I want to pass the log
-    // handler to the IpfsControl library. Maybe we should make the handleLog()
+    // handler to the IpfsControl library. Maybe we should make the statusLog()
     // function a static function for the component Class?
     // this.statusTerminal = new StatusTerminal()
     // this.commandTerminal = new CommandTerminal()
@@ -61,14 +66,14 @@ class Chat extends React.Component {
       ? chatOutputs[connectedPeer].output
       : ''
     return (
-      <Row className='chat-view'>
+      <Row className="chat-view">
         <Col xs={12}>
           <StatusBar />
         </Col>
-        <Col xs={12} lg={6} className='nodes-container'>
+        <Col xs={12} lg={6} className="nodes-container">
           <Handler handleTerminal={_this.onHandleTerminal} peers={peers} />
         </Col>
-        <Col xs={12} lg={6} className='terminals-container'>
+        <Col xs={12} lg={6} className="terminals-container">
           {displayTerminal === 'Chat' && (
             <ChatTerminal
               handleLog={_this.myChat}
@@ -141,21 +146,21 @@ class Chat extends React.Component {
   // This function is triggered when a new peer is detected.
   handleNewPeer (ipfsId) {
     try {
-      console.log(`IPFS ID: ${ipfsId}`)
+      console.log(`New IPFS peer discovered. ID: ${ipfsId}`)
 
-      // TODO: Create a 'peer' component (a new button) that displays the peers
-      // nickname and a new terminal for that peer, which will be used for e2e
-      // encrypted chat.
+      // Use the peer IPFS ID to identify the peers state.
       const { peers, chatOutputs } = _this.state
-      const shortIpfsId = ipfsId.substring(0, 8)
-      peers.push(shortIpfsId)
 
-      // Set default chat values for this peer
+      // Add the new peer to the peers array.
+      peers.push(ipfsId)
+
+      // Add a chatOutput entry for the new peer.
       const obj = {
         output: '',
         nickname: ''
       }
-      chatOutputs[shortIpfsId] = obj
+      // chatOutputs[shortIpfsId] = obj
+      chatOutputs[ipfsId] = obj
 
       _this.setState({
         peers,
@@ -166,19 +171,51 @@ class Chat extends React.Component {
     }
   }
 
+  // Handle decrypted, private messages and send them to the right terminal.
+  privLogChat (str) {
+    try {
+      // console.log(`privLogChat str: ${str}`)
+
+      // Split the string into an ID and a message
+      const [id, msg] = str.split(': ')
+
+      // console.log(`privLogChat2 ${id}: ${msg}`)
+
+      const { chatOutputs } = _this.state
+
+      const terminalOut = `peer: ${msg}`
+
+      // Asigns the output to the corresponding peer
+      chatOutputs[id].output = chatOutputs[id].output + terminalOut + '\n'
+
+      _this.setState({
+        chatOutputs
+      })
+    } catch (err) {
+      console.warn('Error in privLogChat():', err)
+    }
+  }
+
   // Handle chat messages coming in from the IPFS network.
   incommingChat (str) {
     try {
       const { chatOutputs, connectedPeer } = _this.state
+      console.log(`connectedPeer: ${JSON.stringify(connectedPeer, null, 2)}`)
       console.log(`incommingChat str: ${JSON.stringify(str, null, 2)}`)
 
       const msg = str.data.data.message
       const handle = str.data.data.handle
       const terminalOut = `${handle}: ${msg}`
 
-      // Asigns the output to the corresponding peer
-      chatOutputs[connectedPeer].output =
-        chatOutputs[connectedPeer].output + terminalOut + '\n'
+      if (str.data && str.data.apiName && str.data.apiName.includes('chat')) {
+        // If the message is marked as 'chat' data, then post it to the public
+        // chat terminal.
+        chatOutputs.All.output = chatOutputs.All.output + terminalOut + '\n'
+      } else {
+        // Asigns the output to the corresponding peer
+        chatOutputs[connectedPeer].output =
+          chatOutputs[connectedPeer].output + terminalOut + '\n'
+      }
 
       _this.setState({
         chatOutputs
@@ -195,9 +232,13 @@ class Chat extends React.Component {
       const { chatOutputs, connectedPeer } = _this.state
       const terminalOut = `me: ${msg}`
 
-      // Asigns the output to the corresponding peer
-      chatOutputs[connectedPeer].output =
-        chatOutputs[connectedPeer].output + terminalOut + '\n'
+      if (connectedPeer === 'All') {
+        chatOutputs.All.output = chatOutputs.All.output + terminalOut + '\n'
+      } else {
+        // Asigns the output to the corresponding peer
+        chatOutputs[connectedPeer].output =
+          chatOutputs[connectedPeer].output + terminalOut + '\n'
+      }
 
       _this.setState({
         chatOutputs,
@@ -265,6 +306,7 @@ class Chat extends React.Component {
     }
   }
 }
+
 // Props prvided by redux
 Chat.propTypes = {
   bchWallet: PropTypes.object // get minimal-slp-wallet instance
