@@ -200,8 +200,8 @@ class Chat extends React.Component {
   incommingChat (str) {
     try {
       const { chatOutputs, connectedPeer } = _this.state
-      console.log(`connectedPeer: ${JSON.stringify(connectedPeer, null, 2)}`)
-      console.log(`incommingChat str: ${JSON.stringify(str, null, 2)}`)
+      // console.log(`connectedPeer: ${JSON.stringify(connectedPeer, null, 2)}`)
+      // console.log(`incommingChat str: ${JSON.stringify(str, null, 2)}`)
 
       const msg = str.data.data.message
       const handle = str.data.data.handle
