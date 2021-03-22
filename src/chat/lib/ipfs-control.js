@@ -31,7 +31,18 @@ class IpfsControl {
       console.log('Setting up instance of IPFS...')
       this.statusLog('Setting up instance  of IPFS...')
 
-      this.ipfs = await IPFS.create()
+      const ipfsOptions = {
+        config: {
+          Swarm: {
+            ConnMgr: {
+              HighWater: 100,
+              LowWater: 20
+            }
+          }
+        }
+      }
+
+      this.ipfs = await IPFS.create(ipfsOptions)
       this.statusLog('IPFS node created.')
 
       // Generate a new wallet.
@@ -58,6 +69,9 @@ class IpfsControl {
       // Wait for the coordination stuff to be setup.
       await this.ipfsCoord.isReady()
 
+      const nodeConfig = await this.ipfs.config.getAll()
+      console.log(`IPFS node configuration: ${JSON.stringify(nodeConfig, null, 2)}`)
+
       // subscribe to the 'chat' chatroom.
       await this.ipfsCoord.ipfs.pubsub.subscribeToPubsubChannel(
         CHAT_ROOM_NAME,
@@ -78,7 +92,9 @@ class IpfsControl {
       _this.statusLog(' ')
     } catch (err) {
       console.error('Error in startIpfs(): ', err)
-      this.statusLog('Error trying to initialize IPFS node! Have you created a wallet?')
+      this.statusLog(
+        'Error trying to initialize IPFS node! Have you created a wallet?'
+      )
     }
   }
 

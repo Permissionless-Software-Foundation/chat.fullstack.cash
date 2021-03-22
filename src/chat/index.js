@@ -172,21 +172,22 @@ class Chat extends React.Component {
   }
 
   // Handle decrypted, private messages and send them to the right terminal.
-  privLogChat (str) {
+  privLogChat (str, from) {
     try {
-      // console.log(`privLogChat str: ${str}`)
+      console.log(`privLogChat str: ${str}`)
+      console.log(`privLogChat from: ${from}`)
 
       // Split the string into an ID and a message
-      const [id, msg] = str.split(': ')
-
-      // console.log(`privLogChat2 ${id}: ${msg}`)
+      // const [id, msg] = str.split(': ')
+      //
+      // // console.log(`privLogChat2 ${id}: ${msg}`)
 
       const { chatOutputs } = _this.state
 
-      const terminalOut = `peer: ${msg}`
+      const terminalOut = `peer: ${str}`
 
       // Asigns the output to the corresponding peer
-      chatOutputs[id].output = chatOutputs[id].output + terminalOut + '\n'
+      chatOutputs[from].output = chatOutputs[from].output + terminalOut + '\n'
 
       _this.setState({
         chatOutputs
@@ -311,4 +312,5 @@ class Chat extends React.Component {
 Chat.propTypes = {
   bchWallet: PropTypes.object // get minimal-slp-wallet instance
 }
+
 export default Chat

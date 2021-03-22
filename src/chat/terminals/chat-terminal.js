@@ -161,20 +161,28 @@ class ChatTerminal extends React.Component {
 
       // Figure out if we're posting to the general chat channel, or a private
       // message to a peer.
-      let CHAT_ROOM_NAME = 'psf-ipfs-chat-001'
+      const CHAT_ROOM_NAME = 'psf-ipfs-chat-001'
       if (connectedPeer !== 'All') {
-        // This is a private, p2p message.
-        CHAT_ROOM_NAME = connectedPeer
-
-        // Get the IPFS peer that we're trying to talk to.
-        const thisPeer =
-          _this.ipfsControl.ipfsCoord.ipfs.peers.state.peers[connectedPeer]
+        // // This is a private, p2p message.
+        // CHAT_ROOM_NAME = connectedPeer
+        //
+        // // Get the IPFS peer that we're trying to talk to.
+        // const thisPeer =
+        //   _this.ipfsControl.ipfsCoord.ipfs.peers.state.peers[connectedPeer]
+        //
+        // // Send an e2e message to the peer.
+        // await _this.ipfsControl.ipfsCoord.ipfs.encrypt.sendEncryptedMsg(
+        //   thisPeer,
+        //   msg
+        // )
 
         // Send an e2e message to the peer.
-        await _this.ipfsControl.ipfsCoord.ipfs.encrypt.sendEncryptedMsg(
-          thisPeer,
-          msg
-        )
+        // await ipfsCoord.ipfs.encrypt.sendEncryptedMsg(peers[thisPeer], msg)
+        // const peerId = peers[thisPeer].ipfsId
+        // await ipfsCoord.ipfs.orbitdb.sendToDb(peerId, msg)
+
+        // Publish an encrypted message to the peers OrbitDB.
+        await _this.ipfsControl.ipfsCoord.ipfs.orbitdb.sendToDb(connectedPeer, msg)
       } else {
         // This is a chat message for the public chat room.
         const chatObj = {
