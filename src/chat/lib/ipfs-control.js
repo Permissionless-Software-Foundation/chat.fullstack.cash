@@ -35,8 +35,8 @@ class IpfsControl {
         config: {
           Swarm: {
             ConnMgr: {
-              HighWater: 100,
-              LowWater: 20
+              HighWater: 30,
+              LowWater: 10
             }
           }
         }
@@ -44,6 +44,9 @@ class IpfsControl {
 
       this.ipfs = await IPFS.create(ipfsOptions)
       this.statusLog('IPFS node created.')
+
+      // Set a 'low-power' profile for the IPFS node.
+      await this.ipfs.config.profiles.apply('lowpower')
 
       // Generate a new wallet.
       // this.wallet = new BchWallet()
@@ -70,7 +73,9 @@ class IpfsControl {
       await this.ipfsCoord.isReady()
 
       const nodeConfig = await this.ipfs.config.getAll()
-      console.log(`IPFS node configuration: ${JSON.stringify(nodeConfig, null, 2)}`)
+      console.log(
+        `IPFS node configuration: ${JSON.stringify(nodeConfig, null, 2)}`
+      )
 
       // subscribe to the 'chat' chatroom.
       await this.ipfsCoord.ipfs.pubsub.subscribeToPubsubChannel(
