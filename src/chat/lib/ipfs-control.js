@@ -38,6 +38,17 @@ class IpfsControl {
               HighWater: 30,
               LowWater: 10
             }
+          },
+          Routing: {
+            Type: 'dhtclient'
+          }
+        },
+        libp2p: {
+          config: {
+            dht: {
+              enabled: true,
+              clientMode: true
+            }
           }
         }
       }
