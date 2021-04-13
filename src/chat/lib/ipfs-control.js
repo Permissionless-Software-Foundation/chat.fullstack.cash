@@ -31,13 +31,19 @@ class IpfsControl {
       console.log('Setting up instance of IPFS...')
       this.statusLog('Setting up instance  of IPFS...')
 
+      // Use DHT routing and ipfs.io delegates.
       const ipfsOptions = {
         config: {
+          Bootstrap: [
+            '/dns4/ipfs-service-provider.fullstackcash.nl/tcp/443/wss/ipfs/QmbyYXKbnAmMbMGo8LRBZ58jYs58anqUzY1m4jxDmhDsjd',
+            '/dns4/go-ipfs-wss.fullstackcash.nl/tcp/443/wss/ipfs/QmTtXA18C6sg3ji9zem4wpNyoz9m4UZT85mA2D2jx2gzEk'
+          ],
           Swarm: {
             ConnMgr: {
               HighWater: 30,
               LowWater: 10
-            }
+            },
+            AddrFilters: []
           },
           Routing: {
             Type: 'dhtclient'
