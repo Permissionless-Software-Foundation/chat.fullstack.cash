@@ -12,6 +12,22 @@ import IpfsCoord from 'ipfs-coord'
 // CHANGE THESE VARIABLES
 const CHAT_ROOM_NAME = 'psf-ipfs-chat-001'
 
+// JSON-LD schema used in announcement.
+// Customize this data for your own app.
+const name = 'Browser Chat ' + Math.floor(Math.random() * 1000)
+const announceJsonLd = {
+  '@context': 'https://schema.org/',
+  '@type': 'WebAPI',
+  name: name,
+  description: 'This is a browser-based IPFS node.',
+  documentation: '',
+  provider: {
+    '@type': 'Organization',
+    name: 'Permissionless Software Foundation',
+    url: 'https://PSFoundation.cash'
+  }
+}
+
 let _this
 
 class IpfsControl {
@@ -82,7 +98,8 @@ class IpfsControl {
         statusLog: this.statusLog, // Status log
         bchjs: this.wallet.bchjs,
         mnemonic: this.wallet.walletInfo.mnemonic,
-        privateLog: this.privateLog
+        privateLog: this.privateLog,
+        announceJsonLd
       })
       this.statusLog('ipfs-coord library instantiated.')
 
