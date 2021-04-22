@@ -14,7 +14,7 @@ class Handler extends React.Component {
 
   render () {
     const { currentTerminal } = _this.state
-    const { peers } = _this.props
+    const { peers, handlePeerName } = _this.props
     return (
       <div>
         <Row className='chat-nodes'>
@@ -59,7 +59,7 @@ class Handler extends React.Component {
                   currentTerminal === val ? 'clicked-btn' : ''
                 }`}
               >
-                <h5>{val}</h5>
+                <h5>{handlePeerName(val) || val}</h5>
               </Col>
             )
           })}
@@ -95,7 +95,8 @@ class Handler extends React.Component {
 }
 Handler.propTypes = {
   handleTerminal: PropTypes.func,
-  peers: PropTypes.array
+  peers: PropTypes.array,
+  handlePeerName: PropTypes.func
 }
 
 export default Handler
