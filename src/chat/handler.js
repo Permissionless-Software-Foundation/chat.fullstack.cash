@@ -13,7 +13,7 @@ class Handler extends React.Component {
   }
 
   render () {
-    const { currentTerminal } = _this.state
+    const { currentTerminal } = _this.props
     const { peers, handlePeerName } = _this.props
     return (
       <div>
@@ -72,9 +72,9 @@ class Handler extends React.Component {
 
   handlePeer (peer) {
     try {
-      _this.setState({
+      /*     _this.setState({
         currentTerminal: peer
-      })
+      }) */
       _this.props.handleTerminal({ terminal: 'Chat', peer })
     } catch (error) {
       console.warn('Error in handler.js/handlePeer(): ', error)
@@ -83,10 +83,10 @@ class Handler extends React.Component {
 
   handleTerminal (val) {
     try {
-      _this.setState({
+      /*       _this.setState({
         currentTerminal: val
       })
-
+      */
       _this.props.handleTerminal({ terminal: val })
     } catch (error) {
       console.warn('Error in handler.js/handleTerminal(): ', error)
@@ -97,6 +97,7 @@ Handler.propTypes = {
   handleTerminal: PropTypes.func,
   peers: PropTypes.array,
   handlePeerName: PropTypes.func
+  currentTerminal: PropTypes.string
 }
 
 export default Handler

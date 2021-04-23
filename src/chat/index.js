@@ -39,7 +39,8 @@ class Chat extends React.Component {
       },
       nickname: 'Nicknames',
       peers: [],
-      connectedPeer: 'All'
+      connectedPeer: 'All',
+      focusedHandler: 'All' // This is to control the selected terminal css
     }
 
     const ipfsConfig = {
@@ -49,7 +50,14 @@ class Chat extends React.Component {
       bchWallet: props.bchWallet, // bch wallet instance
       privateLog: _this.privLogChat
     }
-    this.ipfsControl = new IpfsControl(ipfsConfig)
+    // Retrieve last ipfs control
+    const { data } = _this.props.menuNavigation
+    if (data && data.chatInfo.ipfsControl) {
+      this.ipfsControl = data.chatInfo.ipfsControl
+    } else {
+      // Instantiate a new ipfs control
+      this.ipfsControl = new IpfsControl(ipfsConfig)
+    }
 
     // CT: Should I instantiate the components here? I want to pass the log
     // handler to the IpfsControl library. Maybe we should make the statusLog()
@@ -59,7 +67,13 @@ class Chat extends React.Component {
   }
 
   render () {
-    const { displayTerminal, peers, connectedPeer, chatOutputs } = _this.state
+    const {
+      displayTerminal,
+      peers,
+      connectedPeer,
+      chatOutputs,
+      focusedHandler
+    } = _this.state
 
     // Obtains the registered chat of the selected peer
     const output = chatOutputs[connectedPeer]
@@ -75,6 +89,7 @@ class Chat extends React.Component {
             handleTerminal={_this.onHandleTerminal}
             peers={peers}
             handlePeerName={_this.onHandlePeerName}
+            currentTerminal={focusedHandler}
           />
         </Col>
         <Col xs={12} lg={6} className='terminals-container'>
@@ -108,7 +123,18 @@ class Chat extends React.Component {
 
   async componentDidMount () {
     try {
-      await this.ipfsControl.startIpfs()
+      const { data } = _this.props.menuNavigation
+
+      // Don't start ipfs if it has started already
+      if (!data || !data.chatInfo.ipfsIsStarted) {
+        await this.ipfsControl.startIpfs()
+      }
+
+      // Loads the previous information and states
+      if (data && data.chatInfo) {
+        const { savedState } = data.chatInfo
+        _this.setState(savedState)
+      }
       // _this.populatePeersWithMock()
     } catch (err) {
       console.error('Error in Chat componentDidMount(): ', err)
@@ -116,17 +142,31 @@ class Chat extends React.Component {
     }
   }
 
+  async componentWillUnmount () {
+    const data = {
+      chatInfo: {
+        ipfsIsStarted: true,
+        savedState: _this.state,
+        ipfsControl: _this.ipfsControl
+      }
+    }
+    // Save the current state
+    _this.props.setMenuNavigation({ data })
+  }
+
   // Switch between the different terminals.
   onHandleTerminal (object) {
     let { connectedPeer } = _this.state
-
+    let focusedHandler = object.terminal
     // Verify if the selected terminal is a chat
     if (object.peer && object.peer !== connectedPeer) {
       connectedPeer = object.peer
+      focusedHandler = object.peer
     }
     _this.setState({
       displayTerminal: object.terminal,
-      connectedPeer
+      connectedPeer,
+      focusedHandler
     })
   }
 
@@ -330,7 +370,9 @@ class Chat extends React.Component {
 
 // Props prvided by redux
 Chat.propTypes = {
-  bchWallet: PropTypes.object // get minimal-slp-wallet instance
+  bchWallet: PropTypes.object, // get minimal-slp-wallet instance
+  menuNavigation: PropTypes.object,
+  setMenuNavigation: PropTypes.func
 }
 
 export default Chat
