@@ -96,7 +96,7 @@ class Handler extends React.Component {
 Handler.propTypes = {
   handleTerminal: PropTypes.func,
   peers: PropTypes.array,
-  handlePeerName: PropTypes.func
+  handlePeerName: PropTypes.func,
   currentTerminal: PropTypes.string
 }
 
