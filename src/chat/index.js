@@ -88,6 +88,7 @@ class Chat extends React.Component {
           <Handler
             handleTerminal={_this.onHandleTerminal}
             peers={peers}
+            handlePeerName={_this.onHandlePeerName}
             currentTerminal={focusedHandler}
           />
         </Col>
@@ -99,6 +100,7 @@ class Chat extends React.Component {
               nickname={_this.state.nickname}
               ipfsControl={_this.ipfsControl}
               chatWith={connectedPeer}
+              handlePeerName={_this.onHandlePeerName}
             />
           )}
           {displayTerminal === 'Command' && (
@@ -333,6 +335,21 @@ class Chat extends React.Component {
       })
     } catch (error) {
       console.warn(error)
+    }
+  }
+
+  // Searchs for the name associated to the peerId
+  onHandlePeerName (peerId) {
+    try {
+      if (!peerId) return null
+
+      const peersInfo = _this.ipfsControl.ipfsCoord.ipfs.peers.state.peers
+      const peerInfo = peersInfo[peerId]
+      const name = peerInfo.jsonLd.name
+      if (!name) return peerId
+      return name
+    } catch (error) {
+      return peerId
     }
   }
 

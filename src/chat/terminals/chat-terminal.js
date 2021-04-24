@@ -24,11 +24,12 @@ class ChatTerminal extends React.Component {
 
   render () {
     const { chatOutput, chatInput } = _this.state
+    const { chatWith, handlePeerName } = _this.props
     return (
       <div>
         <Row>
           <Col xs={12} className='text-center content-box '>
-            <h4>Chat With : {_this.props.chatWith}</h4>
+            <h4>Chat With : {handlePeerName(chatWith) || chatWith}</h4>
           </Col>
           <Col xs={12} className='mt-1'>
             <Text
@@ -182,7 +183,10 @@ class ChatTerminal extends React.Component {
         // await ipfsCoord.ipfs.orbitdb.sendToDb(peerId, msg)
 
         // Publish an encrypted message to the peers OrbitDB.
-        await _this.ipfsControl.ipfsCoord.ipfs.orbitdb.sendToDb(connectedPeer, msg)
+        await _this.ipfsControl.ipfsCoord.ipfs.orbitdb.sendToDb(
+          connectedPeer,
+          msg
+        )
       } else {
         // This is a chat message for the public chat room.
         const chatObj = {
