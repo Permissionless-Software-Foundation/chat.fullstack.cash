@@ -28,15 +28,15 @@ class ChatTerminal extends React.Component {
     return (
       <div>
         <Row>
-          <Col xs={12} className='text-center content-box '>
+          <Col xs={12} className="text-center content-box ">
             <h4>Chat With : {handlePeerName(chatWith) || chatWith}</h4>
           </Col>
-          <Col xs={12} className='mt-1'>
+          <Col xs={12} className="mt-1">
             <Text
-              id='chatTerminal'
-              name='chatTerminal'
-              inputType='textarea'
-              labelPosition='none'
+              id="chatTerminal"
+              name="chatTerminal"
+              inputType="textarea"
+              labelPosition="none"
               rows={20}
               value={`${chatOutput ? `${chatOutput}>` : '>'}`}
               readOnly
@@ -47,29 +47,29 @@ class ChatTerminal extends React.Component {
           </Col>
           <Col xs={3}>
             <Text
-              id='nickname'
-              name='nickname'
-              inputType='text'
-              labelPosition='none'
-              placeholder='Nickname'
+              id="nickname"
+              name="nickname"
+              inputType="text"
+              labelPosition="none"
+              placeholder="Nickname"
               onChange={this.handleNickname}
               value={this.state.nickname}
             />
           </Col>
           <Col xs={9}>
             <Text
-              id='chatInput'
-              name='chatInput'
-              inputType='text'
-              labelPosition='none'
-              placeholder='type message'
+              id="chatInput"
+              name="chatInput"
+              inputType="text"
+              labelPosition="none"
+              placeholder="type message"
               value={chatInput}
               onChange={this.handleTextInput}
               onKeyDown={_this.handleChatKeyDown}
               buttonRight={
                 <Button
-                  type='primary'
-                  text='Send.'
+                  type="primary"
+                  text="Send."
                   onClick={_this.handleChatBtn}
                 />
               }
@@ -127,7 +127,7 @@ class ChatTerminal extends React.Component {
 
   // This handler triggers when the user types a message and hits enter, or
   // clicks the send button.
-  handleChatBtn () {
+  async handleChatBtn () {
     const msg = _this.state.chatInput
     const nickname = _this.state.nickname
 
@@ -140,16 +140,16 @@ class ChatTerminal extends React.Component {
     })
 
     _this.keepChatScrolled()
+
+    // Send a chat message to the chat pubsub room.
+    await _this.sendMsgToIpfs()
   }
 
   // Handles when the Enter key is pressed while in the chat input box.
   async handleChatKeyDown (e) {
     if (e.key === 'Enter') {
       // Display the message on our local chat terminal.
-      _this.handleChatBtn()
-
-      // Send a chat message to the chat pubsub room.
-      await _this.sendMsgToIpfs()
+      await _this.handleChatBtn()
     }
   }
 
