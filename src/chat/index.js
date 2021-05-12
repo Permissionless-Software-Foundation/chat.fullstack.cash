@@ -40,7 +40,8 @@ class Chat extends React.Component {
       nickname: 'Nicknames',
       peers: [],
       connectedPeer: 'All',
-      focusedHandler: 'All' // This is to control the selected terminal css
+      focusedHandler: 'All', // This is to control the selected terminal css
+      nodeInfo: ''
     }
 
     const ipfsConfig = {
@@ -72,7 +73,8 @@ class Chat extends React.Component {
       peers,
       connectedPeer,
       chatOutputs,
-      focusedHandler
+      focusedHandler,
+      nodeInfo
     } = _this.state
 
     // Obtains the registered chat of the selected peer
@@ -82,7 +84,7 @@ class Chat extends React.Component {
     return (
       <Row className='chat-view'>
         <Col xs={12}>
-          <StatusBar />
+          <StatusBar info={nodeInfo} />
         </Col>
         <Col xs={12} lg={6} className='nodes-container'>
           <Handler
@@ -135,6 +137,12 @@ class Chat extends React.Component {
         const { savedState } = data.chatInfo
         _this.setState(savedState)
       }
+
+      // Get my own jsonLD
+      const nodeInfo = this.ipfsControl.getNodeInfo()
+      _this.setState({
+        nodeInfo
+      })
       // _this.populatePeersWithMock()
     } catch (err) {
       console.error('Error in Chat componentDidMount(): ', err)

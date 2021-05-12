@@ -19,8 +19,28 @@
     max-height: 60vh;
     overflow-y: overlay;
 }
+.status-bar{
+    margin-bottom: 1rem;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.status-bar .status-title{
+    margin-right: 5px;
+}
+.status-bar .status-content{
+  /*   border: 1px solid var(--main-color); */
+  margin-bottom: 5px;
+  /* text-align: left; */
+}
 @media screen and (max-width: 700px) {
     .terminals-container{
         margin-top: 3em;
+    }
+    .status-bar{
+        text-align: left;
+    }
+    .status-bar .status-title{
+        margin-right: 0px;
+        margin-bottom: 8px;
     }
   }

@@ -145,6 +145,13 @@ class IpfsControl {
       console.error('Error in handleChatMsg(): ', err)
     }
   }
+
+  getNodeInfo () {
+    return {
+      ipfsId: this.ipfsId,
+      announceJsonLd
+    }
+  }
 }
 
 // module.exports = AppIpfs
