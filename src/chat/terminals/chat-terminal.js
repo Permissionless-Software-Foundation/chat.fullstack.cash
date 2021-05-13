@@ -127,7 +127,7 @@ class ChatTerminal extends React.Component {
 
   // This handler triggers when the user types a message and hits enter, or
   // clicks the send button.
-  handleChatBtn () {
+  async handleChatBtn () {
     const msg = _this.state.chatInput
     const nickname = _this.state.nickname
 
@@ -140,16 +140,16 @@ class ChatTerminal extends React.Component {
     })
 
     _this.keepChatScrolled()
+
+    // Send a chat message to the chat pubsub room.
+    await _this.sendMsgToIpfs()
   }
 
   // Handles when the Enter key is pressed while in the chat input box.
   async handleChatKeyDown (e) {
     if (e.key === 'Enter') {
       // Display the message on our local chat terminal.
-      _this.handleChatBtn()
-
-      // Send a chat message to the chat pubsub room.
-      await _this.sendMsgToIpfs()
+      await _this.handleChatBtn()
     }
   }
 
