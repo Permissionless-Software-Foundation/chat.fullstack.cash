@@ -13,7 +13,11 @@ import StatusTerminal from './terminals/status-terminal'
 import IpfsControl from './lib/ipfs-control'
 
 import StatusBar from './status-bar'
+import Spinner from 'gatsby-ipfs-web-wallet/src/images/loader.gif'
+
 import './chat.css'
+
+const BchWallet = typeof window !== 'undefined' ? window.SlpWallet : null
 
 // _this is the instance of this class. Used when 'this' loses
 // that context.
@@ -23,6 +27,7 @@ class Chat extends React.Component {
   constructor (props) {
     super(props)
     _this = this
+    this.BchWallet = BchWallet
 
     this.state = {
       displayTerminal: 'Chat',
@@ -44,20 +49,9 @@ class Chat extends React.Component {
       nodeInfo: ''
     }
 
-    const ipfsConfig = {
-      statusLog: _this.onStatusLog,
-      // handleChatLog: _this.onCommandLog
-      handleChatLog: _this.incommingChat,
-      bchWallet: props.bchWallet, // bch wallet instance
-      privateLog: _this.privLogChat
-    }
-    // Retrieve last ipfs control
-    const { data } = _this.props.menuNavigation
-    if (data && data.chatInfo.ipfsControl) {
-      this.ipfsControl = data.chatInfo.ipfsControl
-    } else {
-      // Instantiate a new ipfs control
-      this.ipfsControl = new IpfsControl(ipfsConfig)
+    // Starts ipfs control if there is a wallet registered already
+    if (props.bchWallet) {
+      this.initIPFSControl()
     }
 
     // CT: Should I instantiate the components here? I want to pass the log
@@ -86,45 +80,58 @@ class Chat extends React.Component {
         <Col xs={12}>
           <StatusBar info={nodeInfo} />
         </Col>
-        <Col xs={12} lg={6} className='nodes-container'>
-          <Handler
-            handleTerminal={_this.onHandleTerminal}
-            peers={peers}
-            handlePeerName={_this.onHandlePeerName}
-            currentTerminal={focusedHandler}
-          />
-        </Col>
-        <Col xs={12} lg={6} className='terminals-container'>
-          {displayTerminal === 'Chat' && (
-            <ChatTerminal
-              handleLog={_this.myChat}
-              log={output}
-              nickname={_this.state.nickname}
-              ipfsControl={_this.ipfsControl}
-              chatWith={connectedPeer}
+        {this.ipfsControl && (
+          <Col xs={12} lg={6} className='nodes-container'>
+            <Handler
+              handleTerminal={_this.onHandleTerminal}
+              peers={peers}
               handlePeerName={_this.onHandlePeerName}
+              currentTerminal={focusedHandler}
             />
-          )}
-          {displayTerminal === 'Command' && (
-            <CommandTerminal
-              handleLog={_this.onCommandLog}
-              log={_this.state.commandOutput}
-              ipfsControl={_this.ipfsControl}
-            />
-          )}
-          {displayTerminal === 'Status' && (
-            <StatusTerminal
-              handleLog={_this.onStatusLog}
-              log={_this.state.statusOutput}
-            />
-          )}
-        </Col>
+          </Col>
+        )}
+        {this.ipfsControl && (
+          <Col xs={12} lg={6} className='terminals-container'>
+            {displayTerminal === 'Chat' && (
+              <ChatTerminal
+                handleLog={_this.myChat}
+                log={output}
+                nickname={_this.state.nickname}
+                ipfsControl={_this.ipfsControl}
+                chatWith={connectedPeer}
+                handlePeerName={_this.onHandlePeerName}
+              />
+            )}
+            {displayTerminal === 'Command' && (
+              <CommandTerminal
+                handleLog={_this.onCommandLog}
+                log={_this.state.commandOutput}
+                ipfsControl={_this.ipfsControl}
+              />
+            )}
+            {displayTerminal === 'Status' && (
+              <StatusTerminal
+                handleLog={_this.onStatusLog}
+                log={_this.state.statusOutput}
+              />
+            )}
+          </Col>
+        )}
+        {!this.ipfsControl && (
+          <div className='spinner'>
+            <img alt='Loading...' src={Spinner} width={100} />
+          </div>
+        )}
       </Row>
     )
   }
 
   async componentDidMount () {
     try {
+      // Generates a wallet if there is not one
+      // also starts ipfs control once the wallet is registered
+      await this.handleCreateWallet()
+
       const { data } = _this.props.menuNavigation
 
       // Don't start ipfs if it has started already
@@ -372,6 +379,99 @@ class Chat extends React.Component {
       }
     } catch (error) {
       console.warn('Error in populatePeersWithMock(): ', error)
+    }
+  }
+
+  async handleCreateWallet () {
+    try {
+      const currentWallet = _this.props.walletInfo
+
+      if (currentWallet.mnemonic) {
+        console.warn('Wallet already exists')
+        /*
+         * TODO: notify the user that if it has an existing wallet,
+         * it will get overwritten
+         */
+        return
+      }
+      _this.setState({
+        inFetch: true
+      })
+      const apiToken = currentWallet.JWT
+      const restURL = currentWallet.selectedServer
+      const bchjsOptions = {}
+
+      if (apiToken || restURL) {
+        if (apiToken) {
+          bchjsOptions.apiToken = apiToken
+        }
+        if (restURL) {
+          bchjsOptions.restURL = restURL
+        }
+      }
+
+      const bchWalletLib = new _this.BchWallet(null, bchjsOptions)
+
+      // Update bchjs instances  of minimal-slp-wallet libraries
+      bchWalletLib.tokens.sendBch.bchjs = new bchWalletLib.BCHJS(bchjsOptions)
+      bchWalletLib.tokens.utxos.bchjs = new bchWalletLib.BCHJS(bchjsOptions)
+
+      await bchWalletLib.walletInfoPromise // Wait for wallet to be created.
+
+      const walletInfo = bchWalletLib.walletInfo
+      walletInfo.from = 'created'
+
+      Object.assign(currentWallet, walletInfo)
+
+      const myBalance = await bchWalletLib.getBalance()
+
+      const bchjs = bchWalletLib.bchjs
+
+      let currentRate
+
+      if (bchjs.restURL.includes('abc.fullstack')) {
+        currentRate = (await bchjs.Price.getBchaUsd()) * 100
+      } else {
+        // BCHN price.
+        currentRate = (await bchjs.Price.getUsd()) * 100
+      }
+
+      // console.log("myBalance", myBalance)
+      // Update redux state
+      _this.props.setWalletInfo(currentWallet)
+      _this.props.updateBalance({ myBalance, currentRate })
+      _this.props.setBchWallet(bchWalletLib)
+
+      _this.setState({
+        inFetch: false,
+        errMsg: ''
+      })
+
+      _this.initIPFSControl(bchWalletLib)
+    } catch (error) {
+      console.error('Error in handleCreateWallet()', error.message)
+    }
+  }
+
+  initIPFSControl (bchWallet) {
+    try {
+      const ipfsConfig = {
+        statusLog: _this.onStatusLog,
+        // handleChatLog: _this.onCommandLog
+        handleChatLog: _this.incommingChat,
+        bchWallet: bchWallet || _this.props.bchWallet, // bch wallet instance
+        privateLog: _this.privLogChat
+      }
+      // Retrieve last ipfs control
+      const { data } = _this.props.menuNavigation
+      if (data && data.chatInfo.ipfsControl) {
+        this.ipfsControl = data.chatInfo.ipfsControl
+      } else {
+        // Instantiate a new ipfs control
+        this.ipfsControl = new IpfsControl(ipfsConfig)
+      }
+    } catch (err) {
+      console.error(err)
     }
   }
 }
