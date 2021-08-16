@@ -7,17 +7,25 @@
     background-color: var(--main-color);
     color: white;
     text-align: center;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: initial;
 }
+
 .white-border{
     border: 1px solid white;
     cursor: pointer;
 }
 .clicked-btn{
-    opacity: 0.8;
+
+   background-color:  #057f38;;
 }
 .chat-nodes{
     max-height: 60vh;
     overflow-y: overlay;
+
 }
 .status-bar{
     margin-bottom: 1rem;

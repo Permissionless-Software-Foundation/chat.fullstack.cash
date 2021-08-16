@@ -30,7 +30,8 @@ class Chat extends React.Component {
     this.BchWallet = BchWallet
 
     this.state = {
-      displayTerminal: 'Chat',
+      displayTerminal: 'Status',
+      focusedHandler: 'Status', // This is to control the css of the selected terminal
       statusOutput: '',
       commandOutput: "Enter 'help' to see available commands.",
       // This property contains an object that
@@ -45,7 +46,6 @@ class Chat extends React.Component {
       nickname: 'Nicknames',
       peers: [],
       connectedPeer: 'All',
-      focusedHandler: 'All', // This is to control the selected terminal css
       nodeInfo: ''
     }
 
@@ -173,6 +173,7 @@ class Chat extends React.Component {
   onHandleTerminal (object) {
     let { connectedPeer } = _this.state
     let focusedHandler = object.terminal
+    console.log('focusedHandler', focusedHandler)
     // Verify if the selected terminal is a chat
     if (object.peer && object.peer !== connectedPeer) {
       connectedPeer = object.peer
