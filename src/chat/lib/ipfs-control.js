@@ -104,7 +104,7 @@ class IpfsControl {
       this.statusLog('ipfs-coord library instantiated.')
 
       // Wait for the coordination stuff to be setup.
-      await this.ipfsCoord.isReady()
+      await this.ipfsCoord.start()
 
       const nodeConfig = await this.ipfs.config.getAll()
       console.log(
