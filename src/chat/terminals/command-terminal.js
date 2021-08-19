@@ -30,7 +30,7 @@ class CommandTerminal extends React.Component {
       <div>
         <Row>
           <Col xs={12} className='text-center content-box '>
-            <h4>Command Terminal</h4>
+            <span>Command Terminal</span>
           </Col>
           <Col xs={12} className='mt-1'>
             <Text

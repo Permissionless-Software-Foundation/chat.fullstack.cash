@@ -19,7 +19,7 @@ class StatusTerminal extends React.Component {
       <div>
         <Row>
           <Col xs={12} className='text-center content-box '>
-            <h4>IPFS STATUS </h4>
+            <span>IPFS STATUS </span>
           </Col>
           <Col xs={12} className='mt-1'>
             <Text

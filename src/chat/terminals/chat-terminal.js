@@ -29,7 +29,7 @@ class ChatTerminal extends React.Component {
       <div>
         <Row>
           <Col xs={12} className='text-center content-box '>
-            <h4>Chat With : {handlePeerName(chatWith) || chatWith}</h4>
+            <span>Chat With : {handlePeerName(chatWith) || chatWith}</span>
           </Col>
           <Col xs={12} className='mt-1'>
             <Text

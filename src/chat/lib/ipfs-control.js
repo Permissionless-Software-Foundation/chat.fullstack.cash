@@ -51,7 +51,7 @@ class IpfsControl {
       const ipfsOptions = {
         config: {
           Bootstrap: [
-            '/dns4/ipfs-service-provider.fullstackcash.nl/tcp/443/wss/ipfs/QmbyYXKbnAmMbMGo8LRBZ58jYs58anqUzY1m4jxDmhDsjd',
+            '/dns4/ipfs-service-provider.fullstackcash.nl/tcp/443/wss/ipfs/QmSNwrec3GjpzLA8coJiSzdrGzKMELDBjsnsqwkNXDJWz6',
             '/dns4/go-ipfs-wss.fullstackcash.nl/tcp/443/wss/ipfs/QmTtXA18C6sg3ji9zem4wpNyoz9m4UZT85mA2D2jx2gzEk'
           ],
           Swarm: {
@@ -104,7 +104,7 @@ class IpfsControl {
       this.statusLog('ipfs-coord library instantiated.')
 
       // Wait for the coordination stuff to be setup.
-      await this.ipfsCoord.isReady()
+      await this.ipfsCoord.start()
 
       const nodeConfig = await this.ipfs.config.getAll()
       console.log(
