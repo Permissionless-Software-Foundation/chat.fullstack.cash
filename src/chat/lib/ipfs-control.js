@@ -50,10 +50,7 @@ class IpfsControl {
       // Use DHT routing and ipfs.io delegates.
       const ipfsOptions = {
         config: {
-          Bootstrap: [
-            '/dns4/ipfs-service-provider.fullstackcash.nl/tcp/443/wss/ipfs/QmSNwrec3GjpzLA8coJiSzdrGzKMELDBjsnsqwkNXDJWz6',
-            '/dns4/go-ipfs-wss.fullstackcash.nl/tcp/443/wss/ipfs/QmTtXA18C6sg3ji9zem4wpNyoz9m4UZT85mA2D2jx2gzEk'
-          ],
+          Bootstrap: [],
           Swarm: {
             ConnMgr: {
               HighWater: 30,
@@ -74,6 +71,17 @@ class IpfsControl {
           }
         }
       }
+
+      // const ipfsOptions = {
+      //   Bootstrap: [],
+      //   Swarm: {
+      //     ConnMgr: {
+      //       HighWater: 30,
+      //       LowWater: 10
+      //     },
+      //     AddrFilters: []
+      //   }
+      // }
 
       this.ipfs = await IPFS.create(ipfsOptions)
       this.statusLog('IPFS node created.')
@@ -112,9 +120,10 @@ class IpfsControl {
       )
 
       // subscribe to the 'chat' chatroom.
-      await this.ipfsCoord.ipfs.pubsub.subscribeToPubsubChannel(
+      await this.ipfsCoord.adapters.pubsub.subscribeToPubsubChannel(
         CHAT_ROOM_NAME,
-        this.handleChatLog
+        this.handleChatLog,
+        this.ipfsCoord.thisNode
       )
 
       // Pass the IPFS instance to the window object. Makes it easy to debug IPFS
@@ -140,7 +149,7 @@ class IpfsControl {
   // This funciton handles incoming chat messages.
   handleChatMsg (msg) {
     try {
-      console.log('msg: ', msg)
+      console.log('handleChatMsg msg: ', msg)
     } catch (err) {
       console.error('Error in handleChatMsg(): ', err)
     }

@@ -76,12 +76,12 @@ class Chat extends React.Component {
       ? chatOutputs[connectedPeer].output
       : ''
     return (
-      <Row className='chat-view'>
+      <Row className="chat-view">
         <Col xs={12}>
           <StatusBar info={nodeInfo} />
         </Col>
         {this.ipfsControl && (
-          <Col xs={12} lg={6} className='nodes-container'>
+          <Col xs={12} lg={6} className="nodes-container">
             <Handler
               handleTerminal={_this.onHandleTerminal}
               peers={peers}
@@ -91,7 +91,7 @@ class Chat extends React.Component {
           </Col>
         )}
         {this.ipfsControl && (
-          <Col xs={12} lg={6} className='terminals-container'>
+          <Col xs={12} lg={6} className="terminals-container">
             {displayTerminal === 'Chat' && (
               <ChatTerminal
                 handleLog={_this.myChat}
@@ -118,8 +118,8 @@ class Chat extends React.Component {
           </Col>
         )}
         {!this.ipfsControl && (
-          <div className='spinner'>
-            <img alt='Loading...' src={Spinner} width={100} />
+          <div className="spinner">
+            <img alt="Loading..." src={Spinner} width={100} />
           </div>
         )}
       </Row>
@@ -196,7 +196,7 @@ class Chat extends React.Component {
 
       // If a new peer is found, trigger handleNewPeer()
       if (str.includes('New peer found:')) {
-        const ipfsId = str.substring(16)
+        const ipfsId = str.substring(24)
         _this.handleNewPeer(ipfsId)
       }
     } catch (error) {

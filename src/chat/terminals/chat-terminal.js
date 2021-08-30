@@ -28,15 +28,15 @@ class ChatTerminal extends React.Component {
     return (
       <div>
         <Row>
-          <Col xs={12} className='text-center content-box '>
+          <Col xs={12} className="text-center content-box ">
             <span>Chat With : {handlePeerName(chatWith) || chatWith}</span>
           </Col>
-          <Col xs={12} className='mt-1'>
+          <Col xs={12} className="mt-1">
             <Text
-              id='chatTerminal'
-              name='chatTerminal'
-              inputType='textarea'
-              labelPosition='none'
+              id="chatTerminal"
+              name="chatTerminal"
+              inputType="textarea"
+              labelPosition="none"
               rows={20}
               value={`${chatOutput ? `${chatOutput}>` : '>'}`}
               readOnly
@@ -47,29 +47,29 @@ class ChatTerminal extends React.Component {
           </Col>
           <Col xs={3}>
             <Text
-              id='nickname'
-              name='nickname'
-              inputType='text'
-              labelPosition='none'
-              placeholder='Nickname'
+              id="nickname"
+              name="nickname"
+              inputType="text"
+              labelPosition="none"
+              placeholder="Nickname"
               onChange={this.handleNickname}
               value={this.state.nickname}
             />
           </Col>
           <Col xs={9}>
             <Text
-              id='chatInput'
-              name='chatInput'
-              inputType='text'
-              labelPosition='none'
-              placeholder='type message'
+              id="chatInput"
+              name="chatInput"
+              inputType="text"
+              labelPosition="none"
+              placeholder="type message"
               value={chatInput}
               onChange={this.handleTextInput}
               onKeyDown={_this.handleChatKeyDown}
               buttonRight={
                 <Button
-                  type='primary'
-                  text='Send.'
+                  type="primary"
+                  text="Send."
                   onClick={_this.handleChatBtn}
                 />
               }
@@ -183,9 +183,15 @@ class ChatTerminal extends React.Component {
         // await ipfsCoord.ipfs.orbitdb.sendToDb(peerId, msg)
 
         // Publish an encrypted message to the peers OrbitDB.
-        await _this.ipfsControl.ipfsCoord.ipfs.orbitdb.sendToDb(
+        // await _this.ipfsControl.ipfsCoord.ipfs.orbitdb.sendToDb(
+        //   connectedPeer,
+        //   msg
+        // )
+        const thisNode = _this.ipfsControl.ipfsCoord.thisNode
+        await _this.ipfsControl.ipfsCoord.useCases.peer.sendPrivateMessage(
           connectedPeer,
-          msg
+          msg,
+          thisNode
         )
       } else {
         // This is a chat message for the public chat room.
