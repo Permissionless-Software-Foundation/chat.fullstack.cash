@@ -60,7 +60,11 @@ class IpfsControl {
           },
           Routing: {
             Type: 'dhtclient'
-          }
+          },
+          preload: {
+            enabled: false
+          },
+          offline: true
         },
         libp2p: {
           config: {
