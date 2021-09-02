@@ -45,6 +45,7 @@ class Chat extends React.Component {
       },
       nickname: 'Nicknames',
       peers: [],
+      peerNames: {},
       connectedPeer: 'All',
       nodeInfo: ''
     }
@@ -68,7 +69,8 @@ class Chat extends React.Component {
       connectedPeer,
       chatOutputs,
       focusedHandler,
-      nodeInfo
+      nodeInfo,
+      peerNames
     } = _this.state
 
     // Obtains the registered chat of the selected peer
@@ -76,22 +78,22 @@ class Chat extends React.Component {
       ? chatOutputs[connectedPeer].output
       : ''
     return (
-      <Row className="chat-view">
+      <Row className='chat-view'>
         <Col xs={12}>
           <StatusBar info={nodeInfo} />
         </Col>
         {this.ipfsControl && (
-          <Col xs={12} lg={6} className="nodes-container">
+          <Col xs={12} lg={6} className='nodes-container'>
             <Handler
               handleTerminal={_this.onHandleTerminal}
               peers={peers}
-              handlePeerName={_this.onHandlePeerName}
+              peerNames={peerNames}
               currentTerminal={focusedHandler}
             />
           </Col>
         )}
         {this.ipfsControl && (
-          <Col xs={12} lg={6} className="terminals-container">
+          <Col xs={12} lg={6} className='terminals-container'>
             {displayTerminal === 'Chat' && (
               <ChatTerminal
                 handleLog={_this.myChat}
@@ -99,7 +101,7 @@ class Chat extends React.Component {
                 nickname={_this.state.nickname}
                 ipfsControl={_this.ipfsControl}
                 chatWith={connectedPeer}
-                handlePeerName={_this.onHandlePeerName}
+                peerNames={peerNames}
               />
             )}
             {displayTerminal === 'Command' && (
@@ -118,8 +120,8 @@ class Chat extends React.Component {
           </Col>
         )}
         {!this.ipfsControl && (
-          <div className="spinner">
-            <img alt="Loading..." src={Spinner} width={100} />
+          <div className='spinner'>
+            <img alt='Loading...' src={Spinner} width={100} />
           </div>
         )}
       </Row>
@@ -150,7 +152,18 @@ class Chat extends React.Component {
       _this.setState({
         nodeInfo
       })
-      // _this.populatePeersWithMock()
+
+      // Being that the peers data have an updating delay
+      // we use a time interval to update
+      // the peer names
+      setInterval(() => {
+        const { peers, peerNames } = _this.state
+        // Updates the peerNames status if the
+        // length of this one is different to the other peers
+        if (Object.keys(peerNames).length !== peers.length) {
+          _this.updatePeerNames()
+        }
+      }, 1000)
     } catch (err) {
       console.error('Error in Chat componentDidMount(): ', err)
       // Do not throw an error. This is a top-level function.
@@ -354,21 +367,6 @@ class Chat extends React.Component {
     }
   }
 
-  // Searchs for the name associated to the peerId
-  onHandlePeerName (peerId) {
-    try {
-      if (!peerId) return null
-
-      const peersInfo = _this.ipfsControl.ipfsCoord.ipfs.peers.state.peers
-      const peerInfo = peersInfo[peerId]
-      const name = peerInfo.jsonLd.name
-      if (!name) return peerId
-      return name
-    } catch (error) {
-      return peerId
-    }
-  }
-
   // Adds several test perrs
   // Function with testing purposes
   // to evaluate the UI behavior
@@ -473,6 +471,33 @@ class Chat extends React.Component {
       }
     } catch (err) {
       console.error(err)
+    }
+  }
+
+  // Update the peerNames state
+  updatePeerNames () {
+    try {
+      if (!_this.ipfsControl) return
+      const _peerNames = {}
+      // Gets the peer data connected to my node
+      const peerData = _this.ipfsControl.ipfsCoord.thisNode.peerData
+
+      // Maps all the peers connected
+      // and gets the names assigned
+      // to each peer
+      for (let i = 0; i < peerData.length; i++) {
+        const peer = peerData[i]
+
+        const peerName = peer.data.jsonLd.name
+
+        _peerNames[peer.from] = peerName
+      }
+
+      _this.setState({
+        peerNames: _peerNames
+      })
+    } catch (err) {
+      console.error('Error in updatePeerNames(): ')
     }
   }
 }
