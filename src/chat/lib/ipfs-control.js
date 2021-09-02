@@ -6,7 +6,7 @@
   This library contains the logic around the browser-based IPFS full node.
 */
 
-import IPFS from 'ipfs'
+import IPFS from '@chris.troutner/ipfs'
 import IpfsCoord from 'ipfs-coord'
 
 // CHANGE THESE VARIABLES
