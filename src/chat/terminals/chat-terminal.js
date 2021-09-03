@@ -158,12 +158,14 @@ class ChatTerminal extends React.Component {
     try {
       const connectedPeer = _this.props.chatWith
       const msg = _this.state.chatInput
-      console.log(`Sending to ipfs: ${msg} to peer ${connectedPeer}`)
+
+      const CHAT_ROOM_NAME = 'psf-ipfs-chat-001'
 
       // Figure out if we're posting to the general chat channel, or a private
       // message to a peer.
-      const CHAT_ROOM_NAME = 'psf-ipfs-chat-001'
       if (connectedPeer !== 'All') {
+        console.log(`Sending to ipfs: ${msg} to peer ${connectedPeer}`)
+
         // // This is a private, p2p message.
         // CHAT_ROOM_NAME = connectedPeer
         //
@@ -194,6 +196,8 @@ class ChatTerminal extends React.Component {
           thisNode
         )
       } else {
+        console.log('Sending to public chat room')
+
         // This is a chat message for the public chat room.
         const chatObj = {
           message: msg,
