@@ -78,12 +78,12 @@ class Chat extends React.Component {
       ? chatOutputs[connectedPeer].output
       : ''
     return (
-      <Row className='chat-view'>
+      <Row className="chat-view">
         <Col xs={12}>
           <StatusBar info={nodeInfo} />
         </Col>
         {this.ipfsControl && (
-          <Col xs={12} lg={6} className='nodes-container'>
+          <Col xs={12} lg={6} className="nodes-container">
             <Handler
               handleTerminal={_this.onHandleTerminal}
               peers={peers}
@@ -93,7 +93,7 @@ class Chat extends React.Component {
           </Col>
         )}
         {this.ipfsControl && (
-          <Col xs={12} lg={6} className='terminals-container'>
+          <Col xs={12} lg={6} className="terminals-container">
             {displayTerminal === 'Chat' && (
               <ChatTerminal
                 handleLog={_this.myChat}
@@ -120,8 +120,8 @@ class Chat extends React.Component {
           </Col>
         )}
         {!this.ipfsControl && (
-          <div className='spinner'>
-            <img alt='Loading...' src={Spinner} width={100} />
+          <div className="spinner">
+            <img alt="Loading..." src={Spinner} width={100} />
           </div>
         )}
       </Row>
@@ -248,13 +248,8 @@ class Chat extends React.Component {
   // Handle decrypted, private messages and send them to the right terminal.
   privLogChat (str, from) {
     try {
-      console.log(`privLogChat str: ${str}`)
-      console.log(`privLogChat from: ${from}`)
-
-      // Split the string into an ID and a message
-      // const [id, msg] = str.split(': ')
-      //
-      // // console.log(`privLogChat2 ${id}: ${msg}`)
+      // console.log(`privLogChat str: ${str}`)
+      // console.log(`privLogChat from: ${from}`)
 
       const { chatOutputs } = _this.state
 
