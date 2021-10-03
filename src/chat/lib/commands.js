@@ -84,7 +84,8 @@ class CommandRouter {
       // console.log('appIpfs: ', appIpfs)
 
       const relays = `Known ipfs-coord peers:\n${JSON.stringify(
-        appIpfs.ipfsCoord.ipfs.peers.state.peers,
+        // appIpfs.ipfsCoord.ipfs.peers.state.peers,
+        appIpfs.ipfsCoord.thisNode.peerData,
         null,
         2
       )}`
@@ -100,10 +101,10 @@ class CommandRouter {
   // List the relays connected to this IPFS node.
   async listRelays (appIpfs) {
     try {
-      // console.log('appIpfs: ', appIpfs)
+      // console.log('appIpfs.ipfsCoord.thisNode: ', appIpfs.ipfsCoord.thisNode)
 
       const relays = `Known Circuit Relays:\n${JSON.stringify(
-        appIpfs.ipfsCoord.ipfs.cr.state.relays,
+        appIpfs.ipfsCoord.thisNode.relayData,
         null,
         2
       )}`
