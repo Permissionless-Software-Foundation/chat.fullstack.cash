@@ -3,7 +3,7 @@
   concept of Component Shadowing:
   https://www.gatsbyjs.org/blog/2019-04-29-component-shadowing/
 
-  It over-rides he default file in the gatsby-ipfs-web-wallet Theme.
+  It over-rides he default file in the gatsby-theme-bch-wallet Theme.
 */
 
 import React from 'react'
@@ -19,11 +19,11 @@ import { Sidebar } from 'adminlte-2-react'
 // import TXHistory from 'gatsby-plugin-bch-tx-history/src/components/txhistory'
 import TXHistory from 'gatsby-plugin-bch-tx-history'
 
-// Default components from gatsby-ipfs-web-wallet.
-import Wallet from 'gatsby-ipfs-web-wallet/src/components/admin-lte/wallet'
-import Tokens from 'gatsby-ipfs-web-wallet/src/components/admin-lte/tokens'
-import Configure from 'gatsby-ipfs-web-wallet/src/components/admin-lte/configure'
-import SendReceive from 'gatsby-ipfs-web-wallet/src/components/admin-lte/send-receive'
+// Default components from gatsby-theme-bch-wallet.
+import Wallet from 'gatsby-theme-bch-wallet/src/components/admin-lte/wallet'
+import Tokens from 'gatsby-theme-bch-wallet/src/components/admin-lte/tokens'
+import Configure from 'gatsby-theme-bch-wallet/src/components/admin-lte/configure'
+import SendReceive from 'gatsby-theme-bch-wallet/src/components/admin-lte/send-receive'
 import Chat from '../../chat'
 
 const { Item } = Sidebar

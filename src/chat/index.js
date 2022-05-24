@@ -13,7 +13,7 @@ import StatusTerminal from './terminals/status-terminal'
 import IpfsControl from './lib/ipfs-control'
 
 import StatusBar from './status-bar'
-import Spinner from 'gatsby-ipfs-web-wallet/src/images/loader.gif'
+import Spinner from 'gatsby-theme-bch-wallet/src/images/loader.gif'
 
 import './chat.css'
 
