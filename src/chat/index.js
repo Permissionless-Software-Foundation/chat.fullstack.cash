@@ -449,6 +449,8 @@ class Chat extends React.Component {
 
   initIPFSControl (bchWallet) {
     try {
+      console.log('Starting initialiation of IPFS node...')
+
       const ipfsConfig = {
         statusLog: _this.onStatusLog,
         // handleChatLog: _this.onCommandLog
@@ -464,6 +466,8 @@ class Chat extends React.Component {
         // Instantiate a new ipfs control
         this.ipfsControl = new IpfsControl(ipfsConfig)
       }
+
+      console.log('...finished initialization of IPFS node.')
     } catch (err) {
       console.error(err)
     }

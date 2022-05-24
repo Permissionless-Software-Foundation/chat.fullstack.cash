@@ -42,7 +42,7 @@ export default function HTML (props) {
         <script src='https://unpkg.com/minimal-slp-wallet' />
 
         {/* bch-message-lib */}
-        <script src='https://unpkg.com/bch-message-lib' />
+        {/* <script src='https://unpkg.com/bch-message-lib' /> */}
 
         {props.headComponents}
       </head>
