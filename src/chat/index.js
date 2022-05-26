@@ -393,15 +393,20 @@ class Chat extends React.Component {
       })
       const apiToken = currentWallet.JWT
       const restURL = currentWallet.selectedServer
-      const bchjsOptions = {}
 
-      if (apiToken || restURL) {
-        if (apiToken) {
-          bchjsOptions.apiToken = apiToken
-        }
-        if (restURL) {
-          bchjsOptions.restURL = restURL
-        }
+      // const bchjsOptions = {}
+      // if (apiToken || restURL) {
+      //   if (apiToken) {
+      //     bchjsOptions.apiToken = apiToken
+      //   }
+      //   if (restURL) {
+      //     bchjsOptions.restURL = restURL
+      //   }
+      // }
+
+      const bchjsOptions = {
+        interface: 'consumer-api',
+        restURL
       }
 
       const bchWalletLib = new _this.BchWallet(null, bchjsOptions)
@@ -440,6 +445,8 @@ class Chat extends React.Component {
         inFetch: false,
         errMsg: ''
       })
+
+      console.log(`BCH wallet initialized.`)
 
       _this.initIPFSControl(bchWalletLib)
     } catch (error) {
