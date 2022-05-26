@@ -13,12 +13,6 @@ import { Sidebar } from 'adminlte-2-react'
 // your wallet app/site.
 // import DemoComponent from '../../demo-component'
 
-// TX History Plugin.
-// This is an example of an external plugin for the wallet. It's a modular
-// approach to sharing 'lego blocks' between wallet apps.
-// import TXHistory from 'gatsby-plugin-bch-tx-history/src/components/txhistory'
-import TXHistory from 'gatsby-plugin-bch-tx-history'
-
 // Default components from gatsby-theme-bch-wallet.
 import Wallet from 'gatsby-theme-bch-wallet/src/components/admin-lte/wallet'
 import Tokens from 'gatsby-theme-bch-wallet/src/components/admin-lte/tokens'
@@ -61,11 +55,6 @@ const MenuComponents = props => {
       key: 'Configure',
       component: <Configure key='Configure' {...props} />,
       menuItem: <Item icon='fas-cog' key='Configure' text='Configure' />
-    },
-    {
-      key: 'TX History',
-      component: <TXHistory key='TX History' {...props} />,
-      menuItem: <Item icon='fas-cog' key='TX History' text='TX History' />
     }
   ]
 }
