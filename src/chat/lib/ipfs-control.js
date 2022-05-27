@@ -111,7 +111,8 @@ class IpfsControl {
         bchjs: this.wallet.bchjs,
         mnemonic: this.wallet.walletInfo.mnemonic,
         privateLog: this.privateLog,
-        announceJsonLd
+        announceJsonLd,
+        debugLevel: 2
       })
       this.statusLog('ipfs-coord library instantiated.')
 
