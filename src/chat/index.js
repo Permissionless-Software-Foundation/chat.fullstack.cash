@@ -18,6 +18,7 @@ import Spinner from 'gatsby-theme-bch-wallet/src/images/loader.gif'
 import './chat.css'
 
 const BchWallet = typeof window !== 'undefined' ? window.SlpWallet : null
+// const Ipfs = typeof window !== 'undefined' ? window.Ipfs : null
 
 // _this is the instance of this class. Used when 'this' loses
 // that context.
