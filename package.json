@@ -22,7 +22,7 @@
     "gatsby": "4.7.2",
     "gatsby-theme-bch-wallet": "1.7.1",
     "ipfs": "0.58.6",
-    "ipfs-coord": "7.1.16"
+    "ipfs-coord": "7.1.19"
   },
   "repository": {
     "type": "git",

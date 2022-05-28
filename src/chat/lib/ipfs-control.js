@@ -112,7 +112,7 @@ class IpfsControl {
         mnemonic: this.wallet.walletInfo.mnemonic,
         privateLog: this.privateLog,
         announceJsonLd,
-        debugLevel: 2
+        debugLevel: 0
       })
       this.statusLog('ipfs-coord library instantiated.')
 
