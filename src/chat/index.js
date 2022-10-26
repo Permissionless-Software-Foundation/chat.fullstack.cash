@@ -13,11 +13,12 @@ import StatusTerminal from './terminals/status-terminal'
 import IpfsControl from './lib/ipfs-control'
 
 import StatusBar from './status-bar'
-import Spinner from 'gatsby-ipfs-web-wallet/src/images/loader.gif'
+import Spinner from 'gatsby-theme-bch-wallet/src/images/loader.gif'
 
 import './chat.css'
 
 const BchWallet = typeof window !== 'undefined' ? window.SlpWallet : null
+// const Ipfs = typeof window !== 'undefined' ? window.Ipfs : null
 
 // _this is the instance of this class. Used when 'this' loses
 // that context.
@@ -393,15 +394,20 @@ class Chat extends React.Component {
       })
       const apiToken = currentWallet.JWT
       const restURL = currentWallet.selectedServer
-      const bchjsOptions = {}
 
-      if (apiToken || restURL) {
-        if (apiToken) {
-          bchjsOptions.apiToken = apiToken
-        }
-        if (restURL) {
-          bchjsOptions.restURL = restURL
-        }
+      // const bchjsOptions = {}
+      // if (apiToken || restURL) {
+      //   if (apiToken) {
+      //     bchjsOptions.apiToken = apiToken
+      //   }
+      //   if (restURL) {
+      //     bchjsOptions.restURL = restURL
+      //   }
+      // }
+
+      const bchjsOptions = {
+        interface: 'consumer-api',
+        restURL
       }
 
       const bchWalletLib = new _this.BchWallet(null, bchjsOptions)
@@ -441,6 +447,8 @@ class Chat extends React.Component {
         errMsg: ''
       })
 
+      console.log(`BCH wallet initialized.`)
+
       _this.initIPFSControl(bchWalletLib)
     } catch (error) {
       console.error('Error in handleCreateWallet()', error.message)
@@ -449,6 +457,8 @@ class Chat extends React.Component {
 
   initIPFSControl (bchWallet) {
     try {
+      console.log('Starting initialiation of IPFS node...')
+
       const ipfsConfig = {
         statusLog: _this.onStatusLog,
         // handleChatLog: _this.onCommandLog
@@ -464,6 +474,8 @@ class Chat extends React.Component {
         // Instantiate a new ipfs control
         this.ipfsControl = new IpfsControl(ipfsConfig)
       }
+
+      console.log('...finished initialization of IPFS node.')
     } catch (err) {
       console.error(err)
     }

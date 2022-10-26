@@ -39,10 +39,13 @@ export default function HTML (props) {
         </div>
 
         {/* minimal-slp-wallet-web */}
-        <script src='https://unpkg.com/minimal-slp-wallet' />
+        <script src='https://unpkg.com/minimal-slp-wallet@5.2.1' />
 
         {/* bch-message-lib */}
-        <script src='https://unpkg.com/bch-message-lib' />
+        {/* <script src='https://unpkg.com/bch-message-lib' /> */}
+
+        {/*<script src='https://unpkg.com/ipfs' />*/}
+        {/*<script src="https://cdn.jsdelivr.net/npm/ipfs/dist/index.min.js" />*/}
 
         {props.headComponents}
       </head>

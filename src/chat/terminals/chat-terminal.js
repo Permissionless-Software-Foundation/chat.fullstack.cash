@@ -205,14 +205,20 @@ class ChatTerminal extends React.Component {
         }
 
         // console.log(`Sending "${msg}" to ${CHAT_ROOM_NAME}`)
+        // console.log('_this.ipfsControl.ipfsCoord: ', _this.ipfsControl.ipfsCoord)
 
         // Package the message.
-        const chatData = _this.ipfsControl.ipfsCoord.ipfs.schema.chat(chatObj)
+        // const chatData = _this.ipfsControl.ipfsCoord.ipfs.schema.chat(chatObj)
+        const chatData = _this.ipfsControl.ipfsCoord.thisNode.schema.chat(chatObj)
         const chatDataStr = JSON.stringify(chatData)
         console.log(`chatDataStr: ${chatDataStr}`)
 
         // Send the message to the IPFS pubsub channel.
-        await _this.ipfsControl.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(
+        // await _this.ipfsControl.ipfsCoord.ipfs.pubsub.publishToPubsubChannel(
+        //   CHAT_ROOM_NAME,
+        //   chatDataStr
+        // )
+        await _this.ipfsControl.ipfsCoord.adapters.pubsub.messaging.publishToPubsubChannel(
           CHAT_ROOM_NAME,
           chatDataStr
         )

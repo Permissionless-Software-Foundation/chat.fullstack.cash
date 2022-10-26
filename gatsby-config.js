@@ -7,7 +7,6 @@
 module.exports = {
   /* Your site config here */
   plugins: [
-    'gatsby-ipfs-web-wallet',
-    'gatsby-plugin-bch-tx-history'
+    'gatsby-theme-bch-wallet'
   ]
 }

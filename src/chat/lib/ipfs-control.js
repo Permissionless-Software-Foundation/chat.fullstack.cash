@@ -6,7 +6,7 @@
   This library contains the logic around the browser-based IPFS full node.
 */
 
-import IPFS from '@chris.troutner/ipfs'
+import IPFS from 'ipfs-core'
 import IpfsCoord from 'ipfs-coord'
 
 // CHANGE THESE VARIABLES
@@ -111,7 +111,8 @@ class IpfsControl {
         bchjs: this.wallet.bchjs,
         mnemonic: this.wallet.walletInfo.mnemonic,
         privateLog: this.privateLog,
-        announceJsonLd
+        announceJsonLd,
+        debugLevel: 0
       })
       this.statusLog('ipfs-coord library instantiated.')
 
